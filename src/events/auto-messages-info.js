@@ -28,7 +28,7 @@ function shuffle(array) {
     infoList = shuffle(infoList)
     for(var i = 0; i < infoList.length; i++){
         client.channels.cache.get('729083124738162760').send(infoList[i])
-        await wait(2*60*60*1000) // Send every 8 hours
+        await wait(2*60*60*1000) // Send every 2 hours
     }
     repeatList(client)
 }
