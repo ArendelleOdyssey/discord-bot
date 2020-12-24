@@ -1,4 +1,8 @@
 var msgs = 0
+function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
 module.exports = function(client, message, sql){
     if (message.author.bot) return
     if (message.channel.id == '791408464613998652'){
