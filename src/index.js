@@ -37,17 +37,14 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
                     console.error(err)
                     reject(err);
                 }
-                var all = []
-                res.forEach(r=>{
-                    all.push(r.data)
-                })
-                resolve(all);
+                const giveaways = res.map((row) => row.data);
+                resolve(giveaways);
             })
         });
     }
     async saveGiveaway(messageID, giveawayData){
         return new Promise(function (resolve, reject) {
-            sql.query("INSERT INTO `giveaways` (`message_id`, `data`) VALUES (?,?)", [messageID, JSON.stringify(giveawayData)], (err, res) => {
+            sql.query("INSERT INTO `giveaways` (`message_id`, `data`) VALUES (?,?)", [messageID, JSON.stringify(giveawayData, null, 2)], (err, res) => {
                 if (err) {
                     console.error(err)
                     reject(err);
@@ -58,7 +55,7 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
     }
     async editGiveaway(messageID, giveawayData){
         return new Promise(function (resolve, reject) {
-            sql.query('UPDATE `giveaways` SET `data` = ? WHERE `message_id` = ?', [JSON.stringify(giveawayData), messageID], (err, res) => {
+            sql.query('UPDATE `giveaways` SET `data` = ? WHERE `message_id` = ?', [JSON.stringify(giveawayData, null, 2), messageID], (err, res) => {
                 if (err) {
                     console.error(err)
                     reject(err);
