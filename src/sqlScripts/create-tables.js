@@ -23,9 +23,4 @@ module.exports = async function(sql, client, config){
         if (err) console.error(err)
         console.log('[SQL] Created table `giveaways`')
     })
-
-    await sql.query("CREATE TABLE `holiday-wishes` (`id` INT(1) NOT NULL AUTO_INCREMENT, `msg` VARCHAR(2000) NOT NULL, PRIMARY KEY (`id`));", (err, res) => {
-        if (err) console.error(err)
-        console.log('[SQL] Created table `holiday-wishes`')
-    })
 }
