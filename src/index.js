@@ -147,9 +147,6 @@ client.on('message', message => {
         prefix = config.discord.prefix_beta
     }
 
-    // Christmas messages!
-    require('./events/holiday-wishes.js')(client, message, sql)
-
     // Jinx!
     require('./events/jinx.js')(client, message)
 
