@@ -35,9 +35,10 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
             sql.query('SELECT `data` FROM `giveaways`', (err, res) => {
                 if (err) {
                     console.error(err)
-                    reject(err);
+                    return reject(err);
                 }
                 const giveaways = res.map((row) => row.data);
+                console.log(giveaways)
                 resolve(giveaways);
             })
         });
@@ -47,7 +48,7 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
             sql.query("INSERT INTO `giveaways` (`message_id`, `data`) VALUES (?,?)", [messageID, JSON.stringify(giveawayData, null, 2)], (err, res) => {
                 if (err) {
                     console.error(err)
-                    reject(err);
+                    return reject(err);
                 }
                 resolve(true);
             })
@@ -58,7 +59,7 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
             sql.query('UPDATE `giveaways` SET `data` = ? WHERE `message_id` = ?', [JSON.stringify(giveawayData, null, 2), messageID], (err, res) => {
                 if (err) {
                     console.error(err)
-                    reject(err);
+                    return reject(err);
                 }
                 resolve(true);
             })
@@ -69,7 +70,7 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
             sql.query('DELETE FROM `giveaways` WHERE `message_id` = ?', messageID, (err, res) => {
                 if (err) {
                     console.error(err)
-                    reject(err);
+                    return reject(err);
                 }
                 resolve(true);
             })
