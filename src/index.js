@@ -38,7 +38,6 @@ const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
                     return reject(err);
                 }
                 const giveaways = res.map((row) => JSON.parse(row.data));
-                console.log(giveaways)
                 resolve(giveaways);
             })
         });
