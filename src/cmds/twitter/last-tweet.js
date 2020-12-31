@@ -14,17 +14,6 @@ module.exports = async function(client, message, prefix, config){
             };
             const twitter_client = new Twitter(twitter_tokens)
     
-            var result = await twitter_client.get('users/show', { screen_name: config.twitter.screen_name })
-            .catch(err => {
-                console.log(`Twitter User GET request error for ${config.twitter.screen_name}: ` + err.errors[0].message + ' - ' + err.errors[0].code);
-                console.log(err)
-                if (err.errors[0].code == 50 || err.errors[0].code == 63 || err.errors[0].code == 32) {
-                    message.channel.send('Error: Twitter account not found!')
-                }
-                return
-            })
-            if (!result.id_str) return console.log('Twitter Streaming error: unable to find ID of ' + config.twitter.screen_name)
-    
             twitter_client.get('statuses/user_timeline', { screen_name: config.twitter.screen_name }, async (err, tweets) => {
                 try{
                     if (err) client.shard.send(err);
