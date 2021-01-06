@@ -101,61 +101,72 @@ else {
 }
 
 client.on('ready', async () => {
-    await wait(1000);
+    try{
+        await wait(1000);
 
-    console.log(`Logged in as ${client.user.tag}`)
-
-    // Create REST API for api.arendelleodyssey.com
-    require('./api/_express.js')(client, config, sql, guild)
-      
-    if (client.user.id == config.discord.bot_id){
-        const twitter_client = new Twitter({
-            consumer_key:        config.twitter.consumer_key,
-            consumer_secret:     config.twitter.consumer_secret,
-            access_token_key:    config.twitter.access_token_key,
-            access_token_secret: config.twitter.access_token_secret,
-        });
-
-        client.user.setActivity(config.discord.prefix + 'help', { type: 'WATCHING' })
-        client.user.setStatus('online')
-        
-        // Read @ArendelleO Tweets
-        require('./events/streaming-tweets.js')(twitter_client, client, config, sql)
-
-        // Read @arendelleodyssey IG posts
-        //var old_ig_id = undefined
-        //require('./events/streaming-ig.js')(client, config, old_ig_id)
-
-        // Check new youtube posts
-        require('./events/streaming-yt.js')(client, config)
-
-        // Read r/arendelleodyssey posts
-        require('./events/streaming-reddit.js')(client, config)
-
-        // timer messages in general channel
-        require('./events/auto-messages-info.js')(client)
-
-    } else if (client.user.id == config.discord.bot_id_beta) {
-        client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
-        client.user.setStatus('idle')
+        console.log(`Logged in as ${client.user.tag}`)
+    
+        // Create REST API for api.arendelleodyssey.com
+        require('./api/_express.js')(client, config, sql, guild)
+          
+        if (client.user.id == config.discord.bot_id){
+            const twitter_client = new Twitter({
+                consumer_key:        config.twitter.consumer_key,
+                consumer_secret:     config.twitter.consumer_secret,
+                access_token_key:    config.twitter.access_token_key,
+                access_token_secret: config.twitter.access_token_secret,
+            });
+    
+            client.user.setActivity(config.discord.prefix + 'help', { type: 'WATCHING' })
+            client.user.setStatus('online')
+            
+            // Read @ArendelleO Tweets
+            require('./events/streaming-tweets.js')(twitter_client, client, config, sql)
+    
+            // Read @arendelleodyssey IG posts
+            //var old_ig_id = undefined
+            //require('./events/streaming-ig.js')(client, config, old_ig_id)
+    
+            // Check new youtube posts
+            require('./events/streaming-yt.js')(client, config)
+    
+            // Read r/arendelleodyssey posts
+            require('./events/streaming-reddit.js')(client, config)
+    
+            // timer messages in general channel
+            require('./events/auto-messages-info.js')(client)
+    
+        } else if (client.user.id == config.discord.bot_id_beta) {
+            client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
+            client.user.setStatus('idle')
+        }
+    } catch (err) {
+        console.error(err)
+        client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error on ready event: \`\`\`${err}\`\`\``)
     }
 })
 
 client.on('message', message => {
-    // Set bot's prefix (if bot is prod bot or dev bot)
-    var prefix
-    if (client.user.id == config.discord.bot_id){
-        prefix = config.discord.prefix
-    } else if (client.user.id == config.discord.bot_id_beta) {
-        prefix = config.discord.prefix_beta
+    try{
+        // Set bot's prefix (if bot is prod bot or dev bot)
+        var prefix
+        if (client.user.id == config.discord.bot_id){
+            prefix = config.discord.prefix
+        } else if (client.user.id == config.discord.bot_id_beta) {
+            prefix = config.discord.prefix_beta
+        }
+
+        // Jinx!
+        require('./events/jinx.js')(client, message)
+
+        // Auto publisher messages (API from https://github.com/Forcellrus/Discord-Auto-Publisher but simplified for one server)
+        require('./events/auto-publish.js')(client, message, config)
+
+        if (message.author.bot) return
+        require('./cmds/import_cmds.js')(client, message, prefix, config, sql)
+    } catch (err) {
+        console.error(err)
+        message.channel.send('Hmm... There\'s an unattended error while runnding this command. This is reported')
+        client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error on message event: \`\`\`${err}\`\`\``)
     }
-
-    // Jinx!
-    require('./events/jinx.js')(client, message)
-
-    // Auto publisher messages (API from https://github.com/Forcellrus/Discord-Auto-Publisher but simplified for one server)
-    require('./events/auto-publish.js')(client, message, config)
-
-    if (message.author.bot) return
-    require('./cmds/import_cmds.js')(client, message, prefix, config, sql)
 })
