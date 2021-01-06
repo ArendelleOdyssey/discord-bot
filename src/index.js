@@ -129,6 +129,9 @@ client.on('ready', async () => {
         // Check new youtube posts
         require('./events/streaming-yt.js')(client, config)
 
+        // Read r/arendelleodyssey posts
+        require('./events/streaming-reddit.js')(client, config)
+
         // timer messages in general channel
         require('./events/auto-messages-info.js')(client)
 
