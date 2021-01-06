@@ -96,7 +96,7 @@ module.exports = function(message, client, prefix, config){
                 } else {
                     // Create instant
                     const channel = message.mentions.channels.first()
-                    if (!channel || !args.length >= 4) return message.channel.send('I don\'t have all arguments!')
+                    if (!channel || args.length < 4) return message.channel.send('I don\'t have all arguments!')
                     var emojiReact = randomItem(JSON.parse(fs.readFileSync('./data/giveaways_reactions.json')))
                     client.giveawaysManager.start(channel, {
                         time: ms(args[1]),
