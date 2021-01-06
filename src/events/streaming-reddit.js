@@ -26,7 +26,6 @@ module.exports = function(client, config){
                 .setTitle(resData.title.substring(0, 250))
                 .setDescription(`${resData.selftext.length >= 1800 ? resData.selftext.substring(0,1800)+'...' : resData.selftext}${resData.selftext.length < 0 ? `` : `\n\n`}[Open link](https://reddit.com${resData.permalink})`)
                 if(resData.post_hint == 'image') embed.setImage(resData.url)
-                embed.setTimestamp(resData.created_utc)
 
             webhook.send('', {
                 username: resData.subreddit_name_prefixed,

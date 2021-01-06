@@ -25,14 +25,13 @@ module.exports = async function(client, message, prefix, config){
                 .setTitle(resData.title.substring(0, 250))
                 .setDescription(`${resData.selftext.length >= 1800 ? resData.selftext.substring(0,1800)+'...' : resData.selftext}${resData.selftext.length < 0 ? `` : `\n\n`}[Open link](https://reddit.com${resData.permalink})`)
                 if(resData.post_hint == 'image') embed.setImage(resData.url)
-                embed.setTimestamp(resData.created_utc)
 
             webhook.send('', {
                 username: resData.subreddit_name_prefixed,
                 embeds: [embed]
             })
 
-            message.channel.send('The last reddit post was sent on <@'+config.reddit.post_channel_id+'>')
+            message.channel.send('The last reddit post was sent on <#'+config.reddit.post_channel_id+'>')
         } else message.react('❌')
     }
 }
