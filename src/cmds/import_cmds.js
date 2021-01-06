@@ -11,6 +11,9 @@ module.exports = function(client, message, prefix, config, sql){
     require('./twitter/tweet.js')(client, message, prefix, config)
     require('./twitter/last-tweet.js')(client, message, prefix, config)
 
+    // Reddit integration
+    require('./reddit/last-reddit.js')(client, message, prefix, config)
+
     // AO managment commands
     require('./mods/stats/_stats-index.js')(message, client, prefix, config, sql)
     //require('./mods/embed-announcement.js')(message, client, prefix, config)
