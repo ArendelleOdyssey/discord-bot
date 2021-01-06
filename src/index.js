@@ -120,14 +120,14 @@ client.on('ready', async () => {
         client.user.setStatus('online')
         
         // Read @ArendelleO Tweets
-        require('./events/twitter/streaming-tweets.js')(twitter_client, client, config, sql)
+        require('./events/streaming-tweets.js')(twitter_client, client, config, sql)
 
         // Read @arendelleodyssey IG posts
         //var old_ig_id = undefined
-        //require('./events/instagram/streaming-ig.js')(client, config, old_ig_id)
+        //require('./events/streaming-ig.js')(client, config, old_ig_id)
 
         // Check new youtube posts
-        require('./events/youtube/streaming-yt.js')(client, config)
+        require('./events/streaming-yt.js')(client, config)
 
         // timer messages in general channel
         require('./events/auto-messages-info.js')(client)
