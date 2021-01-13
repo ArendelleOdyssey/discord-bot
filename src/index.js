@@ -152,8 +152,10 @@ client.on('message', message => {
         var prefix
         if (client.user.id == config.discord.bot_id){
             prefix = config.discord.prefix
+            client.user.setActivity(config.discord.prefix + 'help', { type: 'WATCHING' })
         } else if (client.user.id == config.discord.bot_id_beta) {
             prefix = config.discord.prefix_beta
+            client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
         }
 
         // Jinx!
