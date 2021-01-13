@@ -1,6 +1,26 @@
 const Discord = require('discord.js')
 const fetch = require('node-fetch')
 
+async function getUserAvatar(screen_name){
+    const url = `https://www.reddit.com/user/${screen_name}/about.json`
+    var res = await fetch(url)
+    var json = await res.json()
+    var resData = json.data
+
+    var avatar = 'https://www.redditinc.com/assets/images/site/reddit-logo.png'
+
+    if (!resData.snoovatar_img || resData.snoovatar_img == ""){
+        if (!resData.icon_img || resData.icon_img == ""){
+            avatar = 'https://www.redditinc.com/assets/images/site/reddit-logo.png'
+        } else  {
+            avatar = resData.icon_img
+        }
+    } else {
+        avatar.snoovatar_img
+    }
+    return avatar
+}
+
 module.exports = async function(client, message, prefix, config){
 
     if (message.content.toLowerCase().startsWith(prefix + 'sendlastreddit')){
@@ -21,10 +41,11 @@ module.exports = async function(client, message, prefix, config){
             }
 
             embed.setColor(config.reddit.embed_color)
-                .setAuthor(`u/${resData.author}${resData.author_flair_text !== null ? ` (${resData.author_flair_text})` : ''}`)
+                .setAuthor(`u/${resData.author}`, await getUserAvatar(resData.author))
                 .setTitle(resData.title.substring(0, 250))
                 .setDescription(`${resData.selftext.length >= 1800 ? resData.selftext.substring(0,1800)+'...' : resData.selftext}${resData.selftext.length < 0 ? `` : `\n\n`}[Open link](https://reddit.com${resData.permalink})`)
                 if(resData.post_hint == 'image') embed.setImage(resData.url)
+                embed.setFooter((!resData.link_flair_text ? '' : resData.link_flair_text+' - ')+'By u/'+resData.author+resData.author_flair_text !== null ? ` [${resData.author_flair_text}]` : '')
 
             webhook.send('', {
                 username: resData.subreddit_name_prefixed,
