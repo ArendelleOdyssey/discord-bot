@@ -1,6 +1,5 @@
 const path = require('path');
 const createError = require('http-errors');
-const { waitForDebugger } = require('inspector');
 var scriptName = path.basename(__filename).replace('.js', '');
 
 module.exports = function(app, client, config, sql, guild){
