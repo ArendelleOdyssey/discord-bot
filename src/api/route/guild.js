@@ -19,13 +19,13 @@ module.exports = function(app, client, config, sql, guild){
             var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})
             if (bannerURL == null) next(createError(404))
             else {
-                download(bannerURL, './data', {filename: 'img/guild_banner.png'})
+                download(bannerURL, './data/cache', {filename: 'guild_banner.png'})
                 .then(async function(){
                     // send image
-                    await res.sendFile(process.cwd() + '/data/img/guild_banner.png')
+                    await res.sendFile(process.cwd() + '/data/cache/guild_banner.png')
 
                     // Then delete it
-                    fs.unlinkSync('./data/img/guild_banner.png')
+                    fs.unlinkSync('./data/cache/guild_banner.png')
                 })
             }
         } catch (err){
