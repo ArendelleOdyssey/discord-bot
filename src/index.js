@@ -105,6 +105,9 @@ client.on('ready', async () => {
         await wait(1000);
 
         console.log(`Logged in as ${client.user.tag}`)
+
+        // Auto-updater every day
+        require('./events/auto-updater.js')(client, config)
     
         // Create REST API for api.arendelleodyssey.com
         require('./api/_express.js')(client, config, sql, guild)
