@@ -1,6 +1,7 @@
 const path = require('path');
 const createError = require('http-errors');
-const { format } = require('path');
+const download = require('download')
+const fs = require('fs')
 var scriptName = path.basename(__filename).replace('.js', '');
 
 module.exports = function(app, client, config, sql, guild){
@@ -17,7 +18,16 @@ module.exports = function(app, client, config, sql, guild){
             var fetchGuild = await client.guilds.fetch(guild)
             var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})
             if (bannerURL == null) next(createError(404))
-            else res.send(bannerURL)
+            else {
+                download(bannerURL, './data', {filename: 'img/guild_banner.png'})
+                .then(async function(){
+                    // send image
+                    await res.sendFile(process.cwd() + '/data/img/guild_banner.png')
+
+                    // Then delete it
+                    fs.unlinkSync('./data/img/guild_banner.png')
+                })
+            }
         } catch (err){
             console.error(err)
             next(createError(500))
