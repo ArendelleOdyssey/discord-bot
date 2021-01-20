@@ -14,7 +14,8 @@ module.exports = function(app, client, config, sql, guild){
     })
     app.get('/'+scriptName+'/banner', async (req, res, next) => {
         try{
-            var bannerURL = await client.guilds.fetch(guild).bannerURL({format: 'png', size: 4096, dynamic: true})
+            var fetchGuild = await client.guilds.fetch(guild)
+            var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})
             if (bannerURL == null) next(createError(404))
             else res.sendFile(bannerURL)
         } catch (err){
