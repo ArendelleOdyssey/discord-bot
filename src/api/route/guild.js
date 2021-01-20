@@ -17,7 +17,7 @@ module.exports = function(app, client, config, sql, guild){
             var fetchGuild = await client.guilds.fetch(guild)
             var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})
             if (bannerURL == null) next(createError(404))
-            else res.sendFile(bannerURL)
+            else res.send(bannerURL)
         } catch (err){
             console.error(err)
             next(createError(500))
