@@ -15,6 +15,7 @@ module.exports = function(client, config){
                             client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error on auto-updater: \`\`\`${stderr}\`\`\``)
                             return
                         }
+                        client.users.cache.find(u => u.id == config.discord.owner_id).send(`New updates available and installed`)
                         console.log('Updates installed, reloading the server...')
                         shell.exec(`pm2 reload ${client.user.id == config.discord.bot_id_beta ? 'beta.':''}ecosystem.config.js`, function(code, stdout, stderr) {
                             if (code != 0) {
