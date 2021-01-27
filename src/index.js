@@ -126,6 +126,8 @@ client.on('ready', async () => {
                     config.discord.prefix + 'help',
                     'jinxs',
                     'on Twitter @ArendelleO',
+                    'on Instagram @arendelleodyssey',
+                    'on Reddit r/ArendelleOdyssey',
                     'arendelleodyssey.com',
                     'user'
                 ];
