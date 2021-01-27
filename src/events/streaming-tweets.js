@@ -19,7 +19,7 @@ module.exports = async function(twitter_client, client, config, sql){
     Tstream.on('start', function(start_result) {
         if (start_result.status == 200){
             console.log(`🟢 Twitter streaming API started - Watching ${config.twitter.screen_name} (ID: ${result.id_str})`)
-            sql.query("UPDATE `twitter_status` SET `isOnline` = 1 WHERE `twitter_status`.`isOnline` = 0", (err, res)=>{
+            sql.query("UPDATE `twitter_status` SET `isOnline` = 1", (err, res)=>{
                 if (err) console.error(err)
             })
         }
@@ -28,7 +28,7 @@ module.exports = async function(twitter_client, client, config, sql){
     Tstream.on("end", async response => {
         console.log(`🔴 Twitter streaming API ended`)
         client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Twitter Streaming API ended`)
-        sql.query("UPDATE `twitter_status` SET `isOnline` = 0 WHERE `twitter_status`.`isOnline` = 1", (err, res)=>{
+        sql.query("UPDATE `twitter_status` SET `isOnline` = 0", (err, res)=>{
             if (err) console.error(err)
         })
     });

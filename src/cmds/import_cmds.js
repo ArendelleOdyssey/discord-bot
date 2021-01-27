@@ -3,6 +3,7 @@ const Discord = require('discord.js')
 module.exports = function(client, message, prefix, config, sql){
 
     require('./help.js')(client, message, prefix, config)
+    require('./about.js')(message, client, prefix, config, sql)
 
     // user-cmds
     require('./user-cmds/bot-mention.js')(client, message, prefix, config, sql)
