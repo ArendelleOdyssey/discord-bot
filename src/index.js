@@ -100,6 +100,10 @@ else {
     guild = "729083124226719816"
 }
 
+function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
 client.on('ready', async () => {
     try{
         await wait(1000);
@@ -113,6 +117,31 @@ client.on('ready', async () => {
         require('./api/_express.js')(client, config, sql, guild)
           
         if (client.user.id == config.discord.bot_id){
+
+            new Promise((resolve, reject) => {
+                setInterval(()=>{
+                    var actmsgs = [
+                        'Welcome To Arendelle Odyssey!',
+                        config.discord.prefix + 'help',
+                        'jinxs',
+                        'on Twitter @ArendelleO',
+                        'arendelleodyssey.com',
+                        randomItem(client.guilds.cache.get(guild).members.array()).displayName
+                    ];
+
+                    sql.query("SELECT * FROM `jinxs`", function (err, res) {
+                        if (err) {
+                            console.error(err)
+                            client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
+                        } else {
+                            actmsgs.splice(actmsgs.indexOf('jinxs'), 1, res[0].count + ' jinxs!')
+                        }
+                    })
+
+                    client.user.setActivity(randomItem(actmsgs), { type: 'WATCHING' })
+                }, 3 * 60 * 1000);
+            });
+
             const twitter_client = new Twitter({
                 consumer_key:        config.twitter.consumer_key,
                 consumer_secret:     config.twitter.consumer_secret,
@@ -155,7 +184,6 @@ client.on('message', message => {
         var prefix
         if (client.user.id == config.discord.bot_id){
             prefix = config.discord.prefix
-            client.user.setActivity(config.discord.prefix + 'help', { type: 'WATCHING' })
         } else if (client.user.id == config.discord.bot_id_beta) {
             prefix = config.discord.prefix_beta
             client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
