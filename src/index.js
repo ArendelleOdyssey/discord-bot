@@ -120,6 +120,7 @@ client.on('ready', async () => {
 
             client.user.setActivity('Welcome To Arendelle Odyssey!')
             setInterval(()=>{
+                var actmsg
                 var actmsgs = [
                     'Welcome To Arendelle Odyssey!',
                     config.discord.prefix + 'help',
@@ -128,14 +129,14 @@ client.on('ready', async () => {
                     'arendelleodyssey.com',
                     'user'
                 ];
-                var actmsg = randomItem(actmsgs)
-                if (actmsg == 'user'){
+                var status = randomItem(actmsgs)
+                if (status == 'user'){
                     var user = randomItem(client.guilds.cache.get(guild).members.cache.array())
                     var nick = user.nickname
                     if (nick == null) actmsg = user.user.username
                     else actmsg = nick
                 }
-                else if (actmsg == 'jinxs'){
+                else if (status == 'jinxs'){
                     sql.query("SELECT * FROM `jinxs`", function (err, res) {
                         if (err) {
                             console.error(err)
@@ -146,6 +147,7 @@ client.on('ready', async () => {
                         }
                     })
                 }
+                else actmsg = status
                 
                 client.user.setActivity(actmsg, { type: 'WATCHING' })
             }, 3 * 60 * 1000);
