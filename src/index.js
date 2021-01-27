@@ -118,29 +118,30 @@ client.on('ready', async () => {
           
         if (client.user.id == config.discord.bot_id){
 
-            new Promise((resolve, reject) => {
-                setInterval(()=>{
-                    var actmsgs = [
-                        'Welcome To Arendelle Odyssey!',
-                        config.discord.prefix + 'help',
-                        'jinxs',
-                        'on Twitter @ArendelleO',
-                        'arendelleodyssey.com',
-                        randomItem(client.guilds.cache.get(guild).members.array()).displayName
-                    ];
-
+            setInterval(()=>{
+                var actmsgs = [
+                    'Welcome To Arendelle Odyssey!',
+                    config.discord.prefix + 'help',
+                    'jinxs',
+                    'on Twitter @ArendelleO',
+                    'arendelleodyssey.com',
+                    randomItem(client.guilds.cache.get(guild).members.array()).displayName
+                ];
+                var actmsg = randomItem(actmsgs)
+                if (actmsg == 'jinxs'){
                     sql.query("SELECT * FROM `jinxs`", function (err, res) {
                         if (err) {
                             console.error(err)
                             client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
+                            actmsg = randomItem(actmsgs)
                         } else {
-                            actmsgs.splice(actmsgs.indexOf('jinxs'), 1, res[0].count + ' jinxs!')
+                            actmsg = res[0].count + ' jinxs!'
                         }
                     })
-
-                    client.user.setActivity(randomItem(actmsgs), { type: 'WATCHING' })
-                }, 3 * 60 * 1000);
-            });
+                }
+                
+                client.user.setActivity(actmsg, { type: 'WATCHING' })
+            }, 3 * 60 * 1000);
 
             const twitter_client = new Twitter({
                 consumer_key:        config.twitter.consumer_key,
