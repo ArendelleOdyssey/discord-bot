@@ -118,42 +118,44 @@ client.on('ready', async () => {
           
         if (client.user.id == config.discord.bot_id){
 
-            client.user.setActivity('Welcome To Arendelle Odyssey!')
-            setInterval(()=>{
-                var actmsg
-                var actmsgs = [
-                    'Welcome To Arendelle Odyssey!',
-                    config.discord.prefix + 'help',
-                    'jinxs',
-                    'on Twitter @ArendelleO',
-                    'on Instagram @arendelleodyssey',
-                    'on Reddit r/ArendelleOdyssey',
-                    'arendelleodyssey.com',
-                    'user'
-                ];
-                var status = randomItem(actmsgs)
-                if (status == 'user'){
-                    var user = randomItem(client.guilds.cache.get(guild).members.cache.array())
-                    var nick = user.nickname
-                    if (nick == null) actmsg = user.user.username
-                    else actmsg = nick
-                }
-                else if (status == 'jinxs'){
-                    sql.query("SELECT * FROM `jinxs`", function (err, res) {
-                        if (err) {
-                            console.error(err)
-                            client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
-                            actmsg = randomItem(actmsgs)
-                        } else {
-                            actmsg = res[0].count + ' jinxs!'
-                        }
-                    })
-                }
-                else actmsg = status
-                
-                client.user.setActivity(actmsg, { type: 'WATCHING' })
-            }, 3 * 60 * 1000);
-
+            new Promise((resolve, reject)=>{
+                client.user.setActivity('Welcome To Arendelle Odyssey!')
+                setInterval(()=>{
+                    var actmsg
+                    var actmsgs = [
+                        'Welcome To Arendelle Odyssey!',
+                        config.discord.prefix + 'help',
+                        'jinxs',
+                        'on Twitter @ArendelleO',
+                        'on Instagram @arendelleodyssey',
+                        'on Reddit r/ArendelleOdyssey',
+                        'arendelleodyssey.com',
+                        'user'
+                    ];
+                    var status = randomItem(actmsgs)
+                    if (status == 'user'){
+                        var user = randomItem(client.guilds.cache.get(guild).members.cache.array())
+                        var nick = user.nickname
+                        if (nick == null) actmsg = user.user.username
+                        else actmsg = nick
+                    }
+                    else if (status == 'jinxs'){
+                        sql.query("SELECT * FROM `jinxs`", function (err, res) {
+                            if (err) {
+                                console.error(err)
+                                client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
+                                actmsg = randomItem(actmsgs)
+                            } else {
+                                actmsg = res[0].count + ' jinxs!'
+                            }
+                        })
+                    }
+                    else actmsg = status
+                    
+                    client.user.setActivity(actmsg)
+                }, 3 * 60 * 1000);
+            })
+            
             const twitter_client = new Twitter({
                 consumer_key:        config.twitter.consumer_key,
                 consumer_secret:     config.twitter.consumer_secret,
