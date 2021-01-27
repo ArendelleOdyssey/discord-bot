@@ -18,7 +18,7 @@ module.exports = function(client, message, prefix, config){
     
         embed.addField(prefix + 'sots', 'Spirit of Two Sisters...', true)
         embed.addField(prefix + 'mention', 'Custom responses when you mention the bot', true)
-        embed.addField(prefix + 'mentionmessage', 'Get a random message of a random traveller on AO', true)
+        embed.addField(prefix + 'quote', 'Get a random message of a random traveller on AO', true)
         embed.addField(prefix + 'customlist', 'List of commands user\'s custom responses', true)
         if (config.twitter.posters.includes(message.author.id)) embed.addField(prefix + 'tweet', 'Post a tweet to Arendelle Odyssey Twitter', true)
         if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.cache.some(role => role.name.toLowerCase() == 'giveaway host')) embed.addField(prefix + 'giveaway', '[Mods/Giveaway Hosters] Host a new giveaway or manage existing giveaways', true)

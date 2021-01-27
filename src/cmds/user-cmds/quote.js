@@ -5,7 +5,7 @@ function randomItem(array) {
 }
 
 module.exports = function (client, message, prefix, config, sql){
-    if (message.content.toLowerCase() == prefix + 'mentionmessage'){
+    if (message.content.toLowerCase() == prefix + 'quote'){
         sql.query("SELECT `message`, `user` FROM `mention_responses`", (err, result)=>{
             if (err){
                 console.error(err)
@@ -13,7 +13,10 @@ module.exports = function (client, message, prefix, config, sql){
                 message.channel.send(':negative_squared_cross_mark: ' + message.author.username + ', an error has been happened. This is reported.')
             } else {
                 var random = randomItem(result)
-                message.channel.send(`> ${random.message}\n> - ${client.users.cache.find(u=>u.id == random.user).username}`)
+                var user = client.users.cache.find(u=>u.id == random.user)
+                if (user == undefined) user = 'An anonymous traveller'
+                else user = user.username
+                message.channel.send(`> ${random.message}\n> - ${user}`)
             }
         })
     }

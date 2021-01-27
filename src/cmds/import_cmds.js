@@ -8,7 +8,7 @@ module.exports = function(client, message, prefix, config, sql){
     require('./user-cmds/bot-mention.js')(client, message, prefix, config, sql)
     require('./user-cmds/custom-user-commands.js')(client, message, prefix, config, sql)
     require('./user-cmds/custom-commands-list.js')(client, message, prefix, config, sql)
-    require('./user-cmds/randommessage.js')(client, message, prefix, config, sql)
+    require('./user-cmds/quote.js')(client, message, prefix, config, sql)
 
     // Twitter integration
     require('./twitter/tweet.js')(client, message, prefix, config)

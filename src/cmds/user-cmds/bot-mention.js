@@ -6,7 +6,7 @@ function randomItem(array) {
 }
 
 module.exports = function(client, message, prefix, config, sql){
-    if (message.content.toLowerCase().startsWith(prefix + 'mention') && !message.content.toLowerCase().endsWith(prefix + 'mentionmessage')){
+    if (message.content.toLowerCase().startsWith(prefix + 'mention')){
         let args = message.content.split(" ");
         args.shift();
         if (args.length < 1) {

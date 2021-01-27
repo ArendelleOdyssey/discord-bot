@@ -126,10 +126,16 @@ client.on('ready', async () => {
                     'jinxs',
                     'on Twitter @ArendelleO',
                     'arendelleodyssey.com',
-                    randomItem(client.guilds.cache.get(guild).members.array()).displayName
+                    'user'
                 ];
                 var actmsg = randomItem(actmsgs)
-                if (actmsg == 'jinxs'){
+                if (actmsg == 'user'){
+                    var user = randomItem(client.guilds.cache.get(guild).members.cache.array())
+                    var nick = user.nickname
+                    if (nick == null) actmsg = user.user.username
+                    else actmsg = nick
+                }
+                else if (actmsg == 'jinxs'){
                     sql.query("SELECT * FROM `jinxs`", function (err, res) {
                         if (err) {
                             console.error(err)
