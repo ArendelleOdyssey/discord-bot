@@ -12,8 +12,8 @@ module.exports = function(message, client, prefix, config, sql){
             try{
                 var t = new Table
                 res.forEach(r=>{
-                    var username = client.users.fetch(String(r.user)).username
-                    if (!username || username == undefined) username = 'Username not found'
+                    var username = client.users.cache.find(u=>u.id == r.user).username
+                    if (!username || username == undefined) username = 'Username not found ('+r.user+')'
                     t.cell('User', username)
                     t.cell('Messages', r.nbmessages)
                     t.newRow()
