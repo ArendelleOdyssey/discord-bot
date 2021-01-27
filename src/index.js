@@ -118,6 +118,7 @@ client.on('ready', async () => {
           
         if (client.user.id == config.discord.bot_id){
 
+            client.user.setActivity('Welcome To Arendelle Odyssey!')
             setInterval(()=>{
                 var actmsgs = [
                     'Welcome To Arendelle Odyssey!',
