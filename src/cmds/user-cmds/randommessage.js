@@ -13,7 +13,7 @@ module.exports = function (client, message, prefix, config, sql){
                 message.channel.send(':negative_squared_cross_mark: ' + message.author.username + ', an error has been happened. This is reported.')
             } else {
                 var random = randomItem(result)
-                message.channel.send(`> ${random.message}\n> - ${random.user}`)
+                message.channel.send(`> ${random.message}\n> - ${client.users.cache.find(u=>u.id == random.user).username}`)
             }
         })
     }
