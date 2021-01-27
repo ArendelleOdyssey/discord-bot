@@ -162,7 +162,7 @@ client.on('message', message => {
         }
 
         // Jinx!
-        require('./events/jinx.js')(client, message)
+        require('./events/jinx.js')(client, message, sql)
 
         // Auto publisher messages (API from https://github.com/Forcellrus/Discord-Auto-Publisher but simplified for one server)
         require('./events/auto-publish.js')(client, message, config)

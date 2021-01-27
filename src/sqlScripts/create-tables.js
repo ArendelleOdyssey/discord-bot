@@ -23,4 +23,9 @@ module.exports = async function(sql, client, config){
         if (err) console.error(err)
         console.log('[SQL] Created table `giveaways`')
     })
+
+    await sql.query("CREATE TABLE IF NOT EXISTS `jinxs` (`count` INT(1) NOT NULL, PRIMARY KEY (`count`));", (err, res) => {
+        if (err) console.error(err)
+        console.log('[SQL] Created table `jinxs`')
+    })
 }
