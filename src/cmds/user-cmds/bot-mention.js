@@ -84,8 +84,13 @@ module.exports = function(client, message, prefix, config, sql){
                         })
                         fs.writeFileSync('./data/cache/mention-messages.txt', list.join('\n'))
                         let attachment = new Discord.MessageAttachment('./data/cache/mention-messages.txt')
-                        message.author.send('Your messages\nFormat: \`Message ID - User ID (Command name) - Message\`', attachment)
-                        message.channel.send(message.author.username + ', I\'ve sent the list on your DM')
+                        message.author.send('Your messages\nFormat: \`Message ID - User ID (Command name) - Message\` - The message will be deleted in 24 hours', attachment).then(m=>{
+                            message.channel.send(message.author.username + ', I\'ve sent the list on your DM')
+                            m.delete(24*60*60*1000)
+                        }).catch(e=>{
+                            console.error(e)
+                            message.channel.send('I cannot send DM to you, check if you have enabled Direct Messages from this server in Privacy Settings')
+                        })
                     }
                 })
             } else {
@@ -101,8 +106,13 @@ module.exports = function(client, message, prefix, config, sql){
                         })
                         fs.writeFileSync('./data/cache/mention-messages.txt', list.join('\n'))
                         let attachment = new Discord.MessageAttachment('./data/cache/mention-messages.txt')
-                        message.author.send('Your messages\nFormat: \`Message ID - Message\`', attachment)
-                        message.channel.send(message.author.username + ', I\'ve sent the list on your DM')
+                        message.author.send('Your messages\nFormat: \`Message ID - Message\` - The message will be deleted in 24 hours', attachment).then(m=>{
+                            message.channel.send(message.author.username + ', I\'ve sent the list on your DM')
+                            m.delete(24*60*60*1000)
+                        }).catch(e=>{
+                            console.error(e)
+                            message.channel.send('I cannot send DM to you, check if you have enabled Direct Messages from this server in Privacy Settings')
+                        })
                     }
                 })
             }
