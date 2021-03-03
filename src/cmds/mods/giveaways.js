@@ -49,7 +49,7 @@ module.exports = function(message, client, prefix, config){
                                         hostedBy: message.author,
                                         reaction: emojiReact,
                                         messages: {
-                                            giveaway: "<:AOBlobHug2:759800110757576734> **GIVEAWAY** <:AOBlobHug1:759800134908510208>",
+                                            giveaway: "**GIVEAWAY**",
                                             giveawayEnded: "~~GIVEAWAY~~",
                                             timeRemaining: "Time remaining: **{duration}**!",
                                             inviteToParticipate: "React with "+emojiReact+" to participate!",
