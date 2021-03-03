@@ -34,6 +34,7 @@ module.exports = async function(twitter_client, client, config, sql){
     });
     Tstream.on('data', async function(tweet) {
         try {
+            if (tweet.user.id_str != result.id_str) return
             if (!tweet.text || tweet.text == '') return
             var con_header = `[Twitter] `
 
