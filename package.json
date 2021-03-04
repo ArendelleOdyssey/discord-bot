@@ -42,6 +42,6 @@
     "youtube-api": "^3.0.1"
   },
   "devDependencies": {
-    "eslint": "^7.18.0"
+    "eslint": "^7.20.0"
   }
 }
