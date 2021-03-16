@@ -18,9 +18,8 @@ module.exports = function(client, config, sql, guild){
     
     app.disable('etag');
     app.use(logger('dev'));
-    app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
-    app.use(cookieParser());    
+    app.use(cookieParser());
     app.use(cors())
 
     app.get('/', (req, res) => {
@@ -37,9 +36,16 @@ module.exports = function(client, config, sql, guild){
         res.send(fs.readFileSync(path.join(__dirname, 'static', req.params.page+'.html'), 'utf-8'));
     })
 
+    app.use(express.json());
+
     // Set pages
-    fs.readdirSync(path.join(__dirname, 'route')).forEach(function(file) {
+    fs.readdirSync(path.join(__dirname, 'route')).filter(file => file.endsWith('.js')).forEach(function(file) {
         require(path.join(__dirname, 'route', file))(app, client, config, sql, guild)
+    });
+
+    // Set pages for dev folder
+    fs.readdirSync(path.join(__dirname, 'route', 'dev')).filter(file => file.endsWith('.js')).forEach(function(file) {
+        require(path.join(__dirname, 'route', 'dev', file))(app, client, config, sql, guild)
     });
 
     // catch 404 and forward to error handler
