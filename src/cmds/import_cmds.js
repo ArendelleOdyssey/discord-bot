@@ -33,6 +33,8 @@ module.exports = function(client, message, prefix, config, sql){
         require('./owner/eval.js')(message, client, prefix)
         require('./owner/shell.js')(message, client, prefix)
         require('./owner/sql.js')(message, client, prefix, sql)
+        require('./owner/gen-api-token.js')(message, client, prefix, sql)
+        require('./owner/token-stats.js')(message, client, prefix, sql)
     }
 
 }
