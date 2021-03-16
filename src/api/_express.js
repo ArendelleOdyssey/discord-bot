@@ -6,6 +6,43 @@ const logger = require('morgan');
 const fs = require('fs');
 const cors = require('cors')
 
+function checkToken(req, res, next, sql, client, guild){
+    var auth = req.get('Authorization')
+    if (!auth){
+        res.status(403).json({error: {code: 403, message: "No Authorization header found, please add a Authorization header. If you don't have one, please contact Greep#3022 directly on discord.gg/arendelleodyssey"}})
+    } else {
+        if (auth.includes('Token ')){
+            var token = auth.replace('Token ', '')
+            sql.query("SELECT * FROM `api-token` WHERE token = ?", token, async (err, result)=>{
+                if (err){
+                    console.error(err)
+                    res.status(503).json({error: {code: 503, message: "Error while getting token list for authentificating."}})
+                    client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error while getting tokens for API: \`\`\`${err}\`\`\``)
+                } else {
+                    if (result.length < 1){
+                        res.status(401).json({error: {code: 401, message: "Token not found. Please contact Greep#3022 directly on discord.gg/arendelleodyssey if you want one"}})
+                    } else {
+                        if (result[0].validate == 0){
+                            res.status(403).json({error: {code: 403, message: "Your Token is not validated."}})
+                        } else {
+                            var fetched = await client.guilds.fetch(guild)
+                            var userfetched = await fetched.members.fetch(result[0].userId)
+                            if (!userfetched){
+                                res.status(403).json({error: {code: 403, message: "Your Discord account with the id '"+result[0].userId+"' is not on the Arendelle Odyssey server. Please join discord.gg/arendelleodyssey"}})
+                            } else {
+                                console.log('[API] Connexion from: '+ userfetched.user.tag)
+                                next()
+                            }
+                        }
+                    }
+                }
+            })
+        } else {
+            res.status(403).json({error: {code: 403, message: "Token not found in Authorization header, please set a Token in Authorization header. If you don't have one, please contact Greep#3022 directly on discord.gg/arendelleodyssey"}})
+        }
+    }
+}
+
 module.exports = function(client, config, sql, guild){
 
     const app = express() 
@@ -62,9 +99,9 @@ module.exports = function(client, config, sql, guild){
 
     app.use(express.json());
 
-    // Set pages
-    fs.readdirSync(path.join(__dirname, 'route')).filter(file => file.endsWith('.js')).forEach(function(file) {
-        require(path.join(__dirname, 'route', file))(app, client, config, sql, guild)
+    // Set pages for pages that does not require token
+    fs.readdirSync(path.join(__dirname, 'route', 'noToken')).filter(file => file.endsWith('.js')).forEach(function(file) {
+        require(path.join(__dirname, 'route', 'noToken', file))(app, client, config, sql, guild)
     });
 
     // Set pages for dev folder
@@ -72,10 +109,18 @@ module.exports = function(client, config, sql, guild){
         require(path.join(__dirname, 'route', 'dev', file))(app, client, config, sql, guild)
     });
 
+    // Set pages that require token
+    app.use((req,res,next)=>checkToken(req,res,next,sql, client, guild))
+    fs.readdirSync(path.join(__dirname, 'route', 'token')).filter(file => file.endsWith('.js')).forEach(function(file) {
+        require(path.join(__dirname, 'route', 'token', file))(app, client, config, sql, guild, checkToken)
+    });
+
+
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
         next(createError(404));
     });
+
     // error handler
     app.use(function(err, req, res, next) {
         // set locals, only providing error in development
@@ -90,6 +135,7 @@ module.exports = function(client, config, sql, guild){
             }
         });
     });
+    
     app.listen(port, () =>{
         console.log(`Status/API server running on port ${port}`)
     })
