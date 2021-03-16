@@ -4,7 +4,7 @@ const download = require('download')
 var scriptName = path.basename(__filename).replace('.js', '');
 
 module.exports = function(app, client, config, sql, guild){
-    app.get('/guild/banner', async (req, res, next) => {
+    app.get('/guild/'+scriptName, async (req, res, next) => {
         try{
             var fetchGuild = await client.guilds.fetch(guild)
             var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})

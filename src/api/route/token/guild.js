@@ -1,6 +1,5 @@
 const path = require('path');
 const createError = require('http-errors');
-const download = require('download')
 var scriptName = path.basename(__filename).replace('.js', '');
 
 module.exports = function(app, client, config, sql, guild){
