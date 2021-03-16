@@ -17,10 +17,34 @@ module.exports = function(client, config, sql, guild){
     }
     
     app.disable('etag');
-    app.use(logger('dev'));
+    app.use(logger('[API log] (:date) :method :url - ":user-agent" (:remote-addr) - :status :response-time ms'));
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
     app.use(cors())
+
+    // User-agent blacklist system
+    app.use(function(req, res, next){
+        var ua = req.get('User-Agent')
+        if (!ua){
+            res.status(403).json({error: {code: 403, message: "No User-Agent found, please add a user-agent to something I can understand!"}})
+        } else {
+            var blacklistUA = JSON.parse(fs.readFileSync(path.join(__dirname, 'user-agent-blacklist.json')))
+            var blacklisted = false
+    
+            blacklistUA.forEach(bUA=>{
+                if (ua.toLowerCase().includes(bUA.toLowerCase())){
+                    blacklisted = true
+                }
+            })
+    
+            if (blacklisted) {
+                console.log('[API] BLACKLISTED UA: ' + ua)
+                res.status(403).json({error: {code: 403, message: "Your User-Agent '"+ ua +"' is blacklisted, please change it to something I can understand!"}})
+            } else {
+                next()
+            }
+        }
+    })
 
     app.get('/', (req, res) => {
         res.json({'online': true})
