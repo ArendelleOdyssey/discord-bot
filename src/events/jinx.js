@@ -14,7 +14,7 @@ module.exports = function(client, message, sql){
                     console.error(err)
                     client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
                 } else {
-                    sql.query("UPDATE `jinxs` SET `count` = '?'", res[0].count+1, function (err, res) {
+                    sql.query("UPDATE `jinxs` SET `count` = '?', `last` = ?", [res[0].count+1, new Date()], function (err, res) {
                         if (err) {
                             console.error(err)
                             client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error updating jinx counter: \`\`\`${err}\`\`\``)
