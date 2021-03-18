@@ -203,6 +203,9 @@ client.on('message', message => {
             client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
         }
 
+        // Check his roles to remove them
+        require('./events/check-roles.js')(client, message, guild)
+
         // Jinx!
         require('./events/jinx.js')(client, message, sql)
 
