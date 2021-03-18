@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 
-module.exports = function(client, message, guild){
+module.exports = function(client, message, guild, config){
     if (client.user.id == config.discord.bot_id){
         if (message.guild.id == guild){ // Check if it's the right server
         var rolesToRemove = [
