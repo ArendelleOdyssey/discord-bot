@@ -21,7 +21,8 @@ module.exports = function(message, client, prefix, sql){
             } else {
                 const randommsgs = JSON.parse(fs.readFileSync('./data/jinx_counter_messages.json'))
                 const images = [
-                    'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spiderman-meme-1545383498.jpg'
+                    'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spiderman-meme-1545383498.jpg',
+                    'https://media1.tenor.com/images/1f17bb27085b1f0cc012d297f4ae04d6/tenor.gif?itemid=15332372'
                 ]
                 let embed = new Discord.MessageEmbed()
                 embed.setTitle('Jinx! counter')
