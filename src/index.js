@@ -194,6 +194,8 @@ client.on('ready', async () => {
 
 client.on('message', message => {
     try{
+        if (message.author.bot) return
+        if (message.channel.type != 'text') return
         // Set bot's prefix (if bot is prod bot or dev bot)
         var prefix
         if (client.user.id == config.discord.bot_id){
@@ -203,17 +205,19 @@ client.on('message', message => {
             client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
         }
 
+        // Check his roles to remove them
+        require('./events/check-roles.js')(client, message, guild, config)
+
         // Jinx!
         require('./events/jinx.js')(client, message, sql)
 
         // Auto publisher messages (API from https://github.com/Forcellrus/Discord-Auto-Publisher but simplified for one server)
         require('./events/auto-publish.js')(client, message, config)
-
-        if (message.author.bot) return
+        
         require('./cmds/import_cmds.js')(client, message, prefix, config, sql)
     } catch (err) {
         console.error(err)
-        message.channel.send('Hmm... There\'s an unattended error while runnding this command. This is reported')
+        message.channel.send('Hmm... There\'s an unattended error while running this command. This is reported')
         client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error on message event: \`\`\`${err}\`\`\``)
     }
 })

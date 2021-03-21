@@ -25,6 +25,7 @@ module.exports = function(client, message, prefix, config, sql){
 
     // AO commands
     require('./ao/sots.js')(message, client, prefix, config)
+    require('./ao/jinxs.js')(message, client, prefix, sql)
     require('./ao/events/event-index.js')(message, client, prefix, config, sql)
 
     // Owner commands
@@ -33,6 +34,8 @@ module.exports = function(client, message, prefix, config, sql){
         require('./owner/eval.js')(message, client, prefix)
         require('./owner/shell.js')(message, client, prefix)
         require('./owner/sql.js')(message, client, prefix, sql)
+        require('./owner/gen-api-token.js')(message, client, prefix, sql)
+        require('./owner/token-stats.js')(message, client, prefix, sql)
     }
 
 }
