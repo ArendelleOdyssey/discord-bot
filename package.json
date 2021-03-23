@@ -23,7 +23,7 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "discord-giveaways": "^4.4.3",
-    "discord.js": "^12.4.1",
+    "discord.js": "^12.5.1",
     "download": "8.0.0",
     "easy-table": "^1.1.1",
     "express": "^4.17.1",
