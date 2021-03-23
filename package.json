@@ -39,7 +39,7 @@
     "path": "^0.12.7",
     "shelljs": "^0.8.4",
     "twit": "2.2.11",
-    "twitter-lite": "^0.14.0",
+    "twitter-lite": "^1.1.0",
     "youtube-api": "^3.0.1"
   },
   "devDependencies": {
