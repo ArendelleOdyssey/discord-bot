@@ -32,7 +32,7 @@ async function playlist(message, args, play, queue, serverQueue){
             await Promise.all(playlist.items.map(async (item) => {
 				const song = {
                     title: item.title,
-                    url: item.url_simple,
+                    url: item.shortUrl,
                 };
 				queueContruct.songs.push(song)
 				console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
