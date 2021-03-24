@@ -120,7 +120,7 @@ async function launch(message, url, play, queue, serverQueue){
 		serverQueue.songs.push(song);
 		message.channel.send(`\`${song.title}\` has been added to the queue!`).then(m=>message.channel.stopTyping(true))
 	}
-	console.log(`${songInfo.title} (${songInfo.video_url}) added in ${message.guild.name}`)
+	console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
         } catch (err) {
                 console.error(err)
                 message.channel.send('Error: ' + err)
