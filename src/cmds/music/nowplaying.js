@@ -6,9 +6,9 @@ function nowplaying(message, client, serverQueue) {
     let embed = new Discord.MessageEmbed()
     embed.setColor('RANDOM')
     embed.setTitle('Now Playing:')
-    embed.setDescription(serverQueue.songs[0].title)
-    if (serverQueue.songs[1]) embed.addField('Next song:', serverQueue.songs[1].title)
-    embed.setFooter(`${client.user.tag}, now serving music in ${message.guild.name}`, client.user.displayAvatarURL)
+    embed.setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
+    if (serverQueue.songs[1]) embed.addField('Next song:', `[${serverQueue.songs[1].title}](${serverQueue.songs[1].url})`)
+    // embed.setFooter(`${client.user.tag}, now serving music in ${message.guild.name}`, client.user.displayAvatarURL)
     message.channel.send(embed)
 }
 
