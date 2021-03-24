@@ -29,14 +29,28 @@ async function playlist(message, args, play, queue, serverQueue){
 				shuffle : false,
 			};
 
-            await Promise.all(playlist.items.map(async (item) => {
-				const song = {
-                    title: item.title,
-                    url: item.shortUrl,
-                };
-				queueContruct.songs.push(song)
-				console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
-			}));
+            if (playlist.continuation == null){
+                await Promise.all(playlist.items.map(async (item) => {
+                    const song = {
+                        title: item.title,
+                        url: item.shortUrl,
+                    };
+                    queueContruct.songs.push(song)
+                    console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
+                }));
+            } else while (playlist.continuation == null) {
+                await Promise.all(playlist.items.map(async (item) => {
+                    const song = {
+                        title: item.title,
+                        url: item.shortUrl,
+                    };
+                    queueContruct.songs.push(song)
+                    console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
+                }));
+                playlist = ytpl.continueReq(playlist.continuation);
+            }
+
+            
   
 			queue.set(message.guild.id, queueContruct);
 
