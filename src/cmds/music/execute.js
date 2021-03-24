@@ -126,7 +126,6 @@ async function launch(message, url, play, queue, serverQueue){
 		serverQueue.songs.push(song);
 		message.channel.send(`\`${song.title}\` has been added to the queue!`).then(m=>message.channel.stopTyping(true))
 	}
-	console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
         } catch (err) {
                 console.error(err)
                 message.channel.send('Error: ' + err)
@@ -138,10 +137,12 @@ async function search(message, args, play, serverQueue, queue){
 		let filter;
 	    const filters1 = await ytsr.getFilters(args.join(' '))
 		const filter1 = filters1.get('Type').get('Video');
+		const filters2 = await ytsr.getFilters(filter1.url)
+        const filter2 = filters2.get('Duration').find(o => o.name.startsWith('Short'));
         var options = {
             limit: 1
         }
-        var searchResults = await ytsr(filter1.url, options)
+        var searchResults = await ytsr(filter2.url, options)
         var url = searchResults.items[0].url
         launch(message, url, play, queue, serverQueue)
 	} catch(err){

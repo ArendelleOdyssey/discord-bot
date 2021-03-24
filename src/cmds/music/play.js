@@ -5,7 +5,6 @@ function play(guild, song, queue) {
 	const serverQueue = queue.get(guild.id);
 
 	if (!song) {
-		console.log(`Queue ended in ${guild.name}`)
         serverQueue.connection.disconnect();
 		queue.delete(guild.id);
 		return;

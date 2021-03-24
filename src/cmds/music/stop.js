@@ -9,7 +9,7 @@ function stop(message, serverQueue, queue) {
         queue.delete(message.guild.id)
         message.react('👋')
     } catch (err) {
-        console.log(err)
+        console.error(err)
         message.react('🖐')
     }
 }
