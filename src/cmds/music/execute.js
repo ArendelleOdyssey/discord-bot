@@ -88,7 +88,7 @@ async function launch(message, url, play, queue, serverQueue){
 	const songInfo = await ytdl.getInfo(url);
 	const song = {
 		title: songInfo.title,
-		url: songInfo.video_url,
+		url: url,
 	};
 	
 	if (!serverQueue) {
