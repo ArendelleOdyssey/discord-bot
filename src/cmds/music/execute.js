@@ -12,7 +12,7 @@ async function playlist(message, args, play, queue, serverQueue){
 			message.channel.send('Error: ' + err)
 		}
 
-		const voiceChannel = message.member.voiceChannel;
+		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
 		const permissions = voiceChannel.permissionsFor(message.client.user);
 		if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
@@ -78,7 +78,7 @@ async function playlist(message, args, play, queue, serverQueue){
 
 async function launch(message, url, play, queue, serverQueue){
         try {
-	const voiceChannel = message.member.voiceChannel;
+	const voiceChannel = message.member.voice.channel;
 	if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
 	const permissions = voiceChannel.permissionsFor(message.client.user);
 	if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
@@ -162,24 +162,22 @@ function search(message, args, play, serverQueue, queue){
 	}
 }
 
-async function execute(message, play, serverQueue, queue) {
+module.exports = async function(message, play, serverQueue, queue) {
     try {
-		let args = message.content.split(' ');
-		args.shift();
+        let args = message.content.split(' ');
+        args.shift();
     
         if (args.length < 1) return message.channel.send('Need search or URL')
-            message.channel.startTyping()
-		if (args[0].startsWith('https://www.youtube.com/playlist?list=')) {
-			playlist(message, args, play, queue, serverQueue)
-		} else if (args[0].startsWith('https://www.youtube.com/watch?v=')){
-			launch(message, args[0], play, queue, serverQueue)
-		} else {
-			search(message, args, play, serverQueue, queue)
-		}
+        
+        if (args[0].startsWith('https://www.youtube.com/playlist?list=')) {
+            playlist(message, args, play, queue, serverQueue)
+        } else if (args[0].startsWith('https://www.youtube.com/watch?v=')){
+            launch(message, args[0], play, queue, serverQueue)
+        } else {
+            search(message, args, play, serverQueue, queue)
+        }
     } catch (err) {
         console.error(err)
         message.channel.send('Error')
     }
 }
-
-module.exports = execute
