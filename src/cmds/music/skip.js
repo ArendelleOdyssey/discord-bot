@@ -10,7 +10,6 @@ function skip(message, serverQueue, play, queue) {
         queue.delete(message.guild.id)
         message.react('👋')
     } else {
-        serverQueue.connection.dispatcher.end();
         play(message.guild, serverQueue.songs[0], queue)
         message.react('⏯')
     }
