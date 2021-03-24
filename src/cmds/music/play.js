@@ -24,7 +24,7 @@ function play(guild, client, song, queue) {
             let embed = new Discord.MessageEmbed()
             embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
             .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
-            serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 10000}))
+            serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 30000}))
             play(guild, client, serverQueue.songs[0], queue);
 		})
 		.on('error', error => {
