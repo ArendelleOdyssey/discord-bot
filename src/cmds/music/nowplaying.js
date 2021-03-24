@@ -3,7 +3,7 @@ const ytdl = require('ytdl-core')
 
 function nowplaying(message, client, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
-    let embed = new Discord.RichEmbed
+    let embed = new Discord.MessageEmbed()
     embed.setColor('RANDOM')
     embed.setTitle('Now Playing:')
     embed.setDescription(serverQueue.songs[0].title)
