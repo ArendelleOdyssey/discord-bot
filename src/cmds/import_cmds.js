@@ -28,6 +28,9 @@ module.exports = function(client, message, prefix, config, sql){
     require('./ao/jinxs.js')(message, client, prefix, sql)
     require('./ao/events/event-index.js')(message, client, prefix, config, sql)
 
+    // Music commands
+    require('./music/_music-index.js')(message, client, prefix)
+
     // Owner commands
     if (message.author.id == config.discord.owner_id){
         require('./owner/update.js')(message, client, prefix, config)
