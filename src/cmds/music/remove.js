@@ -17,14 +17,15 @@ function remove(message, serverQueue) {
             if (args[0].toLowerCase() == 'all'){
                 serverQueue.songs.splice(1, serverQueue.songs.length)
                 return message.channel.send('Removed all waiting queue')
-            } else return message.react('❌')   
+            } else return message.react('❌')
         }
 
-        var song = serverQueue.songs[argNumber]
-        serverQueue.songs.splice(argNumber, 1)
-        return message.channel.send('Removed ' + song.title)
+        if (argNumber > 1){
+            var song = serverQueue.songs[argNumber-1]
+            serverQueue.songs.splice(argNumber-1, 1)
+            return message.channel.send('Removed ' + song.title)
+        } else return message.react('❌')
     }
-    
 }
 
 module.exports = remove

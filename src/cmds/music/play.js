@@ -15,8 +15,7 @@ function play(guild, song, queue) {
 		.on('finish', () => {
 			if (serverQueue.loop == false) serverQueue.songs.shift();
             if (serverQueue.shuffle == true) {
-                if (serverQueue.loop == true) console.log(`${guild.name} - Shuffle actived, but loop actived: doing nothing.`)
-                else if (serverQueue.loop == false) {
+                if (serverQueue.loop == false) {
                     let random = Math.floor(Math.random() * serverQueue.songs.length)
                     var newFirst = serverQueue.songs[random]
                     serverQueue.songs.splice(newFirst, 1);
