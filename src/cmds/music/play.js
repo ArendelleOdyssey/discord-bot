@@ -13,6 +13,11 @@ function play(guild, client, song, queue) {
 	const dispatcher = serverQueue.connection.play(ytdl(song.url, { quality: 'highestaudio' }))
 		.on('finish', () => {
 			if (serverQueue.loop == false) serverQueue.songs.shift();
+			else if (serverQueue.loop == "all") {
+                var song = serverQueue.songs[0]
+                serverQueue.songs.shift();
+                serverQueue.songs.push(song)
+            }
             if (serverQueue.shuffle == true) {
                 if (serverQueue.loop == false) {
                     let random = Math.floor(Math.random() * serverQueue.songs.length)
