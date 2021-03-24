@@ -9,6 +9,7 @@ module.exports = function(message, client, prefix){
 
     if (message.content.toLowerCase().startsWith(`${prefix}playnow `) || message.content.toLowerCase().startsWith(`${prefix}pn `)) require('./executeNow.js')(message, play, serverQueue, queue);
     else if (message.content.toLowerCase().startsWith(`${prefix}play `) || message.content.toLowerCase().startsWith(`${prefix}p `)) require('./execute.js')(message, play, serverQueue, queue);
+    else if (message.content.toLowerCase() == `${prefix}remove`) require('./remove.js')(message, serverQueue);
     else if (message.content.toLowerCase() == `${prefix}skip` || message.content.toLowerCase() == `${prefix}s`) require('./skip.js')(message, serverQueue, play, queue);
     else if (message.content.toLowerCase() == `${prefix}stop` || message.content.toLowerCase() == `${prefix}leave`) require('./stop.js')(message, serverQueue, queue);
     else if (message.content.toLowerCase() == `${prefix}queue` || message.content.toLowerCase() == `${prefix}q`) require('./queue.js')(message, serverQueue);
