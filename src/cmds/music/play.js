@@ -12,7 +12,7 @@ function play(guild, song, queue) {
 	}
 
 	const dispatcher = serverQueue.connection.play(ytdl(song.url, { quality: 'highestaudio' }))
-		.on('end', () => {
+		.on('finish', () => {
 			console.log(`${song.title} ended in ${guild.name}`)
 			if (serverQueue.loop == false) serverQueue.songs.shift();
             if (serverQueue.shuffle == true) {
