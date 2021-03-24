@@ -61,11 +61,11 @@ async function playlist(message, args, play, queue, serverQueue){
 			await Promise.all(playlist.items.map(async (item) => {
 				const songInfo = await ytdl.getInfo(item.url_simple);
 				const song = {
-					title: songInfo.title,
-					url: songInfo.video_url,
+					title: songInfo.videoDetails.title,
+					url: songInfo.videoDetails.video_url,
 				};
 				serverQueue.songs.push(song)
-				console.log(`[Playlist] ${songInfo.title} (${songInfo.video_url}) added in ${message.guild.name}`)
+				console.log(`[Playlist] ${song.title} (${song.url}) added in ${message.guild.name}`)
 			  }));
 			 message.channel.stopTyping(true)
 		}
@@ -87,8 +87,8 @@ async function launch(message, url, play, queue, serverQueue){
 
 	const songInfo = await ytdl.getInfo(url);
 	const song = {
-		title: songInfo.title,
-		url: url,
+		title: songInfo.videoDetails.title,
+		url: songInfo.videoDetails.video_url,
 	};
 	
 	if (!serverQueue) {
@@ -129,33 +129,14 @@ async function launch(message, url, play, queue, serverQueue){
 
 function search(message, args, play, serverQueue, queue){
 	try{
-	let filter;
-	ytsr.getFilters(args.join(' '), function(err, filters) {
-		if(err){
-			console.error(err)
-			message.channel.send(err)
-		}
-		filter = filters.get('Type').find(o => o.name === 'Video');
-		ytsr.getFilters(filter.ref, function(err, filters) {
+		ytsr(args.join(' '), {limit: 1}, async function(err, searchResults) {
 			if(err){
 				console.error(err)
 				message.channel.send(err)
 			}
-			filter = filters.get('Duration').find(o => o.name.startsWith('Short'));
-			var options = {
-				limit: 5,
-				nextpageRef: filter.ref,
-			}
-			ytsr(null, options, async function(err, searchResults) {
-				if(err){
-					console.error(err)
-					message.channel.send(err)
-				}
-				var url = searchResults.items[0].link
-				launch(message, url, play, queue, serverQueue)
-			});
-	  	});
-	  });
+			var url = searchResults.items[0].link
+			launch(message, url, play, queue, serverQueue)
+	    });
 	} catch(err){
 		console.error(err)
 		message.channel.send(err)
