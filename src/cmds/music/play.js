@@ -6,7 +6,7 @@ function play(guild, song, queue) {
 
 	if (!song) {
 		console.log(`Queue ended in ${guild.name}`)
-		serverQueue.voiceChannel.leave();
+        serverQueue.connection.disconnect();
 		queue.delete(guild.id);
 		return;
 	}
