@@ -6,7 +6,7 @@ const wait = require('util').promisify(setTimeout);
 
 async function playlist(message, args, play, queue, serverQueue){
 	try{
-        var playlist = await ytpl(args[0].replace('https://www.youtube.com/playlist?list=',''))
+        var playlist = await ytpl(args[0].replace('https://www.youtube.com/playlist?list=',''), {pages: Infinity})
 
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
@@ -35,7 +35,7 @@ async function playlist(message, args, play, queue, serverQueue){
                     };
                     queueContruct.songs.push(song)
                 }));
-                
+
                 if (playlist.continuation != null){
                     playlist = ytpl.continueReq(playlist.continuation);
                 } else break;
