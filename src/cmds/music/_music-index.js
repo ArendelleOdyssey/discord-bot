@@ -5,6 +5,7 @@ var queue = new Map();
 module.exports = function(message, client, prefix){
     
     const serverQueue = queue.get(message.guild.id)
+    const play = require('./play.js')
 
     if (message.content.toLowerCase().startsWith(`${prefix}playnow `) || message.content.toLowerCase().startsWith(`${prefix}pn `)) require('./executenow.js')(message, play, serverQueue, queue);
     else if (message.content.toLowerCase().startsWith(`${prefix}play `) || message.content.toLowerCase().startsWith(`${prefix}p `)) require('./execute.js')(message, play, serverQueue, queue);
