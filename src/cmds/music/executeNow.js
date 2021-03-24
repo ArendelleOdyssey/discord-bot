@@ -58,22 +58,22 @@ async function playlist(message, client, args, play, queue, serverQueue){
 				}
 			
 		 } else {
-            var tmparray = []
+            var i = 1
             while (true) {
                 await Promise.all(playlist.items.map(async (item) => {
                     const song = {
                         title: item.title,
                         url: item.shortUrl,
                     };
-                    tmparray.push(song)
+                    serverQueue.songs.splice(i,0,song);
+                    i++
                 }));
 
                 if (playlist.continuation != null){
                     playlist = ytpl.continueReq(playlist.continuation);
                 } else break;
             }
-            serverQueue.songs.splice(1,0,tmparray);
-            message.channel.send(`Added ${tmparray.length} songs to the first on the queue`)
+            message.channel.send(`Added ${i-1} songs to the first on the queue`)
 		}
 		
     } catch (err) {
