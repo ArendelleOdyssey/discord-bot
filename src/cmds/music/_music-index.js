@@ -7,8 +7,8 @@ module.exports = function(message, client, prefix){
     const serverQueue = queue.get(message.guild.id)
     const play = require('./play.js')
 
-    if (message.content.toLowerCase().startsWith(`${prefix}playnow`) || message.content.toLowerCase().startsWith(`${prefix}pn`)) require('./executeNow.js')(message, play, serverQueue, queue);
-    else if (message.content.toLowerCase().startsWith(`${prefix}play`) || message.content.toLowerCase().startsWith(`${prefix}p`)) require('./execute.js')(message, play, serverQueue, queue);
+    if (message.content.toLowerCase().startsWith(`${prefix}playnow`) || message.content.toLowerCase().startsWith(`${prefix}pn`)) require('./executeNow.js')(message, client, play, serverQueue, queue);
+    else if (message.content.toLowerCase().startsWith(`${prefix}play`) || message.content.toLowerCase().startsWith(`${prefix}p`)) require('./execute.js')(message, client, play, serverQueue, queue);
     else if (message.content.toLowerCase().startsWith(`${prefix}remove`)) require('./remove.js')(message, serverQueue);
     else if (message.content.toLowerCase() == `${prefix}skip` || message.content.toLowerCase() == `${prefix}s`) require('./skip.js')(message, serverQueue, play, queue);
     else if (message.content.toLowerCase() == `${prefix}stop` || message.content.toLowerCase() == `${prefix}leave`) require('./stop.js')(message, serverQueue, queue);

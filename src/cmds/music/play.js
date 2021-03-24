@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 const ytdl = require('ytdl-core')
 
-function play(guild, song, queue) {
+function play(client, guild, song, queue) {
 	const serverQueue = queue.get(guild.id);
 
 	if (!song) {
