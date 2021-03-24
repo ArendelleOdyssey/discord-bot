@@ -143,7 +143,7 @@ async function search(message, args, play, serverQueue, queue){
         var options = {
             limit: 1
         }
-        var searchResults = ytsr(filter2.url, options)
+        var searchResults = await ytsr(filter2.url, options)
         var url = searchResults.items[0].url
         launch(message, url, play, queue, serverQueue)
 	} catch(err){
