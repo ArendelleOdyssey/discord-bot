@@ -138,7 +138,7 @@ async function search(message, args, play, serverQueue, queue){
 	    const filters1 = await ytsr.getFilters(args.join(' '))
 		const filter1 = filters1.get('Type').get('Video');
         const filters2 = await ytsr.getFilters(filter1.url)
-        const filter2 = filters2.get('Duration')
+        const filter2 = filters2.find(o => o.name == 'Duration');
         filter2 = filter2.find(o => o.name.startsWith('Short'));
         var options = {
             limit: 1
