@@ -35,7 +35,7 @@ async function playlist(message, args, play, queue, serverQueue){
                     };
                     queueContruct.songs.push(song)
                 }));
-            } else while (playlist.continuation == null) {
+            } else while (playlist.continuation != null) {
                 await Promise.all(playlist.items.map(async (item) => {
                     const song = {
                         title: item.title,
