@@ -159,7 +159,12 @@ module.exports = async function(message, client, play, serverQueue, queue) {
     
         if (args.length < 1) return message.channel.send('Need search or URL')
         
-        if (isNaN(Number(args[0]))){
+        if (!isNaN(Number(args[0]))){
+            var newFirst = serverQueue.songs[Number(args[0])-1]
+            serverQueue.songs.splice(newFirst, 1);
+            serverQueue.songs.unshift(newFirst)
+            message.channel.send(`Moved ${newFirst.title} to the next song to play. ${serverQueue.shuffle ? '\n**Shuffle is enabled, be sure to disable to get your song played**': ''}`)
+        } else {
             if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
                 playlist(message, client, args, play, queue, serverQueue)
             } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
@@ -167,11 +172,6 @@ module.exports = async function(message, client, play, serverQueue, queue) {
             } else {
                 search(message, client, args, play, serverQueue, queue)
             }
-        } else {
-            var newFirst = serverQueue.songs[Number(args[0])-1]
-            serverQueue.songs.splice(newFirst, 1);
-            serverQueue.songs.unshift(newFirst)
-            message.channel.send(`Moved ${newFirst.title} to the next song to play. ${serverQueue.shuffle ? '\n**Shuffle is enabled, be sure to disable to get your song played**': ''}`)
         }        
     } catch (err) {
         console.error(err)
