@@ -8,10 +8,10 @@ function skip(message, serverQueue, play, queue) {
     if (serverQueue.songs.length < 1){
         serverQueue.connection.disconnect();
         queue.delete(message.guild.id)
-        message.react('👋')
+        message.react('⏹')
     } else {
         play(message.guild, serverQueue.songs[0], queue)
-        message.react('⏯')
+        message.react('⏭')
     }
 }
 
