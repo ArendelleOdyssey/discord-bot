@@ -27,7 +27,7 @@ async function playlist(message, args, play, queue, serverQueue){
 				shuffle : false,
 			};
 
-            if (playlist.continuation == null){
+            while (true) {
                 await Promise.all(playlist.items.map(async (item) => {
                     const song = {
                         title: item.title,
@@ -35,15 +35,10 @@ async function playlist(message, args, play, queue, serverQueue){
                     };
                     queueContruct.songs.push(song)
                 }));
-            } else while (playlist.continuation != null) {
-                await Promise.all(playlist.items.map(async (item) => {
-                    const song = {
-                        title: item.title,
-                        url: item.shortUrl,
-                    };
-                    queueContruct.songs.push(song)
-                }));
-                playlist = ytpl.continueReq(playlist.continuation);
+                
+                if (playlist.continuation != null){
+                    playlist = ytpl.continueReq(playlist.continuation);
+                } else break;
             }
 
             message.channel.send(`Added ${queueContruct.songs.length} songs to the queue.`)
