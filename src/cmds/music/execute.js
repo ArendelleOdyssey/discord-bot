@@ -6,7 +6,7 @@ const wait = require('util').promisify(setTimeout);
 
 async function playlist(message, args, play, queue, serverQueue){
 	try{
-        var playlist = await ytpl(args[0].replace('https://www.youtube.com/playlist?list=',''), {pages: Infinity})
+        var playlist = await ytpl(args[0].replace('https://music.youtube.com/playlist?list=','').replace('https://www.youtube.com/playlist?list=',''), {pages: Infinity})
 
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
@@ -153,9 +153,9 @@ module.exports = async function(message, play, serverQueue, queue) {
     
         if (args.length < 1) return message.channel.send('Need search or URL')
         
-        if (args[0].startsWith('https://www.youtube.com/playlist?list=')) {
+        if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
             playlist(message, args, play, queue, serverQueue)
-        } else if (args[0].startsWith('https://www.youtube.com/watch?v=')){
+        } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
             launch(message, args[0], play, queue, serverQueue)
         } else {
             search(message, args, play, serverQueue, queue)
