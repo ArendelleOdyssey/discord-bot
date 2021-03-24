@@ -14,7 +14,7 @@ function skip(message, client, serverQueue, play, queue) {
         embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
             .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
         serverQueue.textChannel.send(embed).then(m=>m.delete(10000))
-        play(message.guild, serverQueue.songs[0], queue)
+        play(message.guild, client, serverQueue.songs[0], queue)
         message.react('⏭')
     }
 }
