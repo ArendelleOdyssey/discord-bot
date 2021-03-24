@@ -58,7 +58,7 @@ async function playlist(message, args, play, queue, serverQueue){
 				}
 			
 		 } else {
-			var tmparray = []
+            var tmparray = []
             while (true) {
                 await Promise.all(playlist.items.map(async (item) => {
                     const song = {
@@ -72,8 +72,8 @@ async function playlist(message, args, play, queue, serverQueue){
                     playlist = ytpl.continueReq(playlist.continuation);
                 } else break;
             }
-            serverQueue.songs.push(tmparray)
-            message.channel.send(`Added ${tmparray.length} songs to the queue`)
+            serverQueue.songs.unshift(tmparray)
+            message.channel.send(`Added ${tmparray.length} songs to the first on the queue`)
 		}
 		
     } catch (err) {
@@ -123,8 +123,8 @@ async function launch(message, url, play, queue, serverQueue){
 			return message.channel.send(err);
 		}
 	} else {
-		serverQueue.songs.push(song);
-		message.channel.send(`\`${song.title}\` has been added to the queue!`).then(m=>message.channel.stopTyping(true))
+		serverQueue.songs.unshift(song);
+		message.channel.send(`\`${song.title}\` has been added to the first in the queue!`).then(m=>message.channel.stopTyping(true))
 	}
 	console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
         } catch (err) {
