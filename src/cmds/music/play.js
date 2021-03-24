@@ -17,7 +17,7 @@ function play(guild, client, song, queue) {
                 if (serverQueue.loop == false) {
                     let random = Math.floor(Math.random() * serverQueue.songs.length)
                     var newFirst = serverQueue.songs[random]
-                    serverQueue.songs.splice(newFirst, 1);
+                    serverQueue.songs.splice(random, 1);
 				    serverQueue.songs.unshift(newFirst)
                 }
             }

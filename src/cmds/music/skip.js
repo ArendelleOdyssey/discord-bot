@@ -7,7 +7,7 @@ function skip(message, client, serverQueue, play, queue) {
     if (serverQueue.shuffle == true) {
         let random = Math.floor(Math.random() * serverQueue.songs.length)
         var newFirst = serverQueue.songs[random]
-        serverQueue.songs.splice(newFirst, 1);
+        serverQueue.songs.splice(random, 1);
         serverQueue.songs.unshift(newFirst)
     } else serverQueue.songs.shift();
     if (serverQueue.songs.length < 1){

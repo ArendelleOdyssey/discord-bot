@@ -179,7 +179,7 @@ module.exports = async function(message, client, play, serverQueue, queue) {
                         search(message, client, args, play, serverQueue, queue)
                     }
                 } else {
-                    serverQueue.songs.splice(newFirst-1, 1);
+                    serverQueue.songs.splice(Number(args[0])-1, 1);
                     serverQueue.songs.splice(1,0,newFirst)
                     message.channel.send(`Moved ${newFirst.title} to the next song to play. ${serverQueue.shuffle ? '\n**Shuffle is enabled, be sure to disable to get your song played**': ''}`)
                 }
