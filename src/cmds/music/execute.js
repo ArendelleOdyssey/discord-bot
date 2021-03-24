@@ -15,7 +15,7 @@ async function playlist(message, args, play, queue, serverQueue){
 			return message.channel.send('I need the permissions to join and speak in your voice channel!').then(m=>message.channel.stopTyping(true))
 		}
 
-		message.channel.send(`Adding ${playlist.items.length} songs to the queue, please be patient (it takes some times)`)
+		message.channel.send(`Adding ${playlist.items.length} songs to the queue.`)
 
 		if (!serverQueue) {
 			const queueContruct = {
@@ -30,13 +30,12 @@ async function playlist(message, args, play, queue, serverQueue){
 			};
 
             await Promise.all(playlist.items.map(async (item) => {
-				const songInfo = await ytdl.getInfo(item.url_simple);
 				const song = {
-					title: songInfo.title,
-					url: songInfo.video_url,
-				};
+                    title: item.title,
+                    url: item.url_simple,
+                };
 				queueContruct.songs.push(song)
-				console.log(`${songInfo.title} (${songInfo.video_url}) added in ${message.guild.name}`)
+				console.log(`${song.title} (${song.url}) added in ${message.guild.name}`)
 			}));
   
 			queue.set(message.guild.id, queueContruct);
