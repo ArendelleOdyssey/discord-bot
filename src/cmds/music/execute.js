@@ -7,11 +7,64 @@ const wait = require('util').promisify(setTimeout);
 async function playlist(message, args, play, queue, serverQueue){
 	try{
         var playlist = await ytpl(args[0].replace('https://www.youtube.com/playlist?list=',''))
-		
-        playlist.items.forEach(item=>{
-            var url = item.shortUrl
-            launch(message, url, play, queue, serverQueue)
-        })
+
+		const voiceChannel = message.member.voiceChannel;
+		if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
+		const permissions = voiceChannel.permissionsFor(message.client.user);
+		if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+			return message.channel.send('I need the permissions to join and speak in your voice channel!').then(m=>message.channel.stopTyping(true))
+		}
+
+		message.channel.send(`Adding ${playlist.items.length} songs to the queue, please be patient (it takes some times)`)
+
+		if (!serverQueue) {
+			const queueContruct = {
+				textChannel: message.channel,
+				voiceChannel: voiceChannel,
+				connection: null,
+				songs: [],
+				volume: 100,
+				playing: true,
+				loop : false,
+				shuffle : false,
+			};
+
+            await Promise.all(playlist.items.map(async (item) => {
+				const songInfo = await ytdl.getInfo(item.url_simple);
+				const song = {
+					title: songInfo.title,
+					url: songInfo.video_url,
+				};
+				queueContruct.songs.push(song)
+				console.log(`${songInfo.title} (${songInfo.video_url}) added in ${message.guild.name}`)
+			}));
+  
+			queue.set(message.guild.id, queueContruct);
+            
+				try {
+					var connection = await voiceChannel.join();
+					queueContruct.connection = connection;
+					await play(message.guild, queueContruct.songs[0], queue);
+					message.channel.stopTyping(true)
+					message.react('▶')
+				} catch (err) {
+					console.error(err);
+					queue.delete(message.guild.id);
+					return message.channel.send(err);
+				}
+			
+		 } else {
+			await Promise.all(playlist.items.map(async (item) => {
+				const songInfo = await ytdl.getInfo(item.url_simple);
+				const song = {
+					title: songInfo.title,
+					url: songInfo.video_url,
+				};
+				serverQueue.songs.push(song)
+				console.log(`[Playlist] ${songInfo.title} (${songInfo.video_url}) added in ${message.guild.name}`)
+			  }));
+			 message.channel.stopTyping(true)
+		}
 		
     } catch (err) {
         console.error(err)
@@ -53,7 +106,7 @@ async function launch(message, url, play, queue, serverQueue){
 			queueContruct.connection = connection;
 			play(message.guild, queueContruct.songs[0], queue);
 			message.channel.stopTyping(true)
-                        message.react('▶')
+            message.react('▶')
 		} catch (err) {
 			console.error(err);
 			queue.delete(message.guild.id);
@@ -74,9 +127,9 @@ async function search(message, args, play, serverQueue, queue){
 	try{
 		let filter;
 	    const filters1 = await ytsr.getFilters(args.join(' '))
-		const filter1 = filters1.get('Type').find(o => o.name === 'Video');
+		const filter1 = filters1.get('Type').get('Video');
 		const filters2 = await ytsr.getFilters(filter1.url)
-        const filter2 = filters2.get('Duration').find(o => o.name.startsWith('Short'));
+        const filter2 = filters2.get('Duration').get('Short');
         var options = {
             limit: 1
         }
