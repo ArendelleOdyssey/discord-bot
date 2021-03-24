@@ -30,6 +30,10 @@ function play(guild, song, queue) {
 			console.error(error);
 		});
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
+    
+    serverQueue.connection.on('disconnect', ()=>{
+        queue.delete(guild.id)
+    })
 }
 
 module.exports = play
