@@ -32,4 +32,17 @@ module.exports = async function(message, client, prefix, config, sql) {
             message.channel.send(aboutembed).then(m.delete())
         })
     }
+
+    if (message.content.toLowerCase() == prefix + 'bug'){
+        let embed = new Discord.MessageEmbed()
+        embed.setTitle('Found a bug, or errors in a row ?')
+        embed.setDescription(`Don't worry! [Check if it's already listed here](https://github.com/ArendelleOdyssey/discord-bot/issues?q=is%3Aopen+is%3Aissue+label%3Abug).\n\nIf not, [open a issue here!](https://github.com/ArendelleOdyssey/discord-bot/issues/new?assignees=&labels=bug&template=bug_report.md&title=)`)
+        message.channel.sned(embed)
+    }
+    if (message.content.toLowerCase() == prefix + 'feature'){
+        let embed = new Discord.MessageEmbed()
+        embed.setTitle('Want something new on your lovely bot ?')
+        embed.setDescription(`Aww that's cute! [Check if your feature is already listed here](https://github.com/ArendelleOdyssey/discord-bot/issues?q=is%3Aopen+is%3Aissue+label%3A%22Feature+request%22).\n\nIf not, [create your feature request here!](https://github.com/ArendelleOdyssey/discord-bot/issues/new?assignees=&labels=Feature+request&template=feature_request.md&title=)`)
+        message.channel.sned(embed)
+    }
 }

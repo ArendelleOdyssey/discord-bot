@@ -22,6 +22,7 @@ module.exports = function(client, message, prefix, config){
         embed.addField(prefix + 'customlist', 'List of commands user\'s custom responses', true)
         embed.addField(prefix + 'jinxs', 'See the Jinxs! counter', true)
         embed.addField(prefix + 'music', 'Play music on voice channel', true)
+        embed.addField(prefix + 'bug / '+prefix+'feature', 'Report a bug or suggest a new feature!', true)
         if (config.twitter.posters.includes(message.author.id)) embed.addField(prefix + 'tweet', 'Post a tweet to Arendelle Odyssey Twitter', true)
         if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.cache.some(role => role.name.toLowerCase() == 'giveaway host')) embed.addField(prefix + 'giveaway', '[Mods/Giveaway Hosters] Host a new giveaway or manage existing giveaways', true)
         if (message.member.hasPermission('MANAGE_MESSAGES')) embed.addField(prefix + 'stat', '[Mods] Get stats about the bot', true)
