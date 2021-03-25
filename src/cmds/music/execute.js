@@ -4,7 +4,7 @@ const ytsr = require('ytsr')
 const ytpl = require('ytpl')
 const wait = require('util').promisify(setTimeout);
 
-async function playlist(message, client, args, play, queue, serverQueue){
+async function playlist(message, client, args, play, queue, serverQueue, sql){
 	try{
         var playlist = await ytpl(args[0].replace('https://music.youtube.com/playlist?list=','').replace('https://www.youtube.com/playlist?list=',''), {pages: Infinity})
 
@@ -48,7 +48,7 @@ async function playlist(message, client, args, play, queue, serverQueue){
 				try {
 					var connection = await voiceChannel.join();
 					queueContruct.connection = connection;
-					await play(message.guild, client, queueContruct.songs[0], queue);
+					await play(message.guild, client, queueContruct.songs[0], queue, sql);
 					message.channel.stopTyping(true)
 					message.react('▶')
 				} catch (err) {
@@ -82,7 +82,7 @@ async function playlist(message, client, args, play, queue, serverQueue){
     }
 }
 
-async function launch(message, client, url, play, queue, serverQueue){
+async function launch(message, client, url, play, queue, serverQueue, sql){
         try {
 	const voiceChannel = message.member.voice.channel;
 	if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
@@ -114,7 +114,7 @@ async function launch(message, client, url, play, queue, serverQueue){
 		try {
 			var connection = await voiceChannel.join();
 			queueContruct.connection = connection;
-			play(message.guild, client, queueContruct.songs[0], queue);
+			play(message.guild, client, queueContruct.songs[0], queue, sql);
 			message.channel.stopTyping(true)
             message.react('▶')
 		} catch (err) {
@@ -132,7 +132,7 @@ async function launch(message, client, url, play, queue, serverQueue){
         }
 }
 
-async function search(message, client, args, play, serverQueue, queue){
+async function search(message, client, args, play, serverQueue, queue, sql){
 	try{
 		let filter;
 	    const filters1 = await ytsr.getFilters(args.join(' '))
@@ -145,14 +145,14 @@ async function search(message, client, args, play, serverQueue, queue){
         var searchResults = await ytsr(filter2.url, options)
         if (searchResults.items.length < 1) return message.channel.send('Nothing found, try something else or put a YouTube URL')
         var url = searchResults.items[0].url
-        launch(message, client, url, play, queue, serverQueue)
+        launch(message, client, url, play, queue, serverQueue, sql)
 	} catch(err){
 		console.error(err)
 		message.channel.send(err)
 	}
 }
 
-module.exports = async function(message, client, play, serverQueue, queue) {
+module.exports = async function(message, client, play, serverQueue, queue, sql) {
     try {
         let args = message.content.split(' ');
         args.shift();
@@ -160,11 +160,11 @@ module.exports = async function(message, client, play, serverQueue, queue) {
         if (args.length < 1) return message.channel.send('Need search or URL')
         
         if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
-            playlist(message, client, args, play, queue, serverQueue)
+            playlist(message, client, args, play, queue, serverQueue, sql)
         } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
-            launch(message, client, args[0], play, queue, serverQueue)
+            launch(message, client, args[0], play, queue, serverQueue, sql)
         } else {
-            search(message, client, args, play, serverQueue, queue)
+            search(message, client, args, play, serverQueue, queue, sql)
         }
     } catch (err) {
         console.error(err)

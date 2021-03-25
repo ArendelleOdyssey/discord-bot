@@ -90,4 +90,20 @@ CREATE TABLE IF NOT EXISTS `twitter_status` (
   `isOnline` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`isOnline`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `music`
+--
+
+DROP TABLE IF EXISTS `music`;
+CREATE TABLE IF NOT EXISTS `music` (
+  `id`  bigint(255) NOT NULL AUTO_INCREMENT,
+  `name` varchar(1000) NOT NULL,
+  `link` varchar(1000) NOT NULL,
+  `dateOfPlay` varchar(1000) NOT NULL,
+  `isPlaying` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 COMMIT;

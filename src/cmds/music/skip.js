@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 const ytdl = require('ytdl-core');
 
-function skip(message, client, serverQueue, play, queue) {
+function skip(message, client, serverQueue, play, queue, sql) {
 	if (!message.member.voice.channel) return message.channel.send('You have to be in a voice channel to stop the music!');
 	if (!serverQueue) return message.channel.send('There is no song that I could skip!');
     if (serverQueue.shuffle == true) {
@@ -19,7 +19,7 @@ function skip(message, client, serverQueue, play, queue) {
         embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
             .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
         serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 30000}))
-        play(message.guild, client, serverQueue.songs[0], queue)
+        play(message.guild, client, serverQueue.songs[0], queue, sql)
         message.react('⏭')
     }
 }

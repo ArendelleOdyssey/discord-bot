@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 const ytdl = require('ytdl-core')
 
-function play(guild, client, song, queue) {
+function play(guild, client, song, queue, sql) {
 	const serverQueue = queue.get(guild.id);
 
 	if (!song) {
@@ -10,8 +10,22 @@ function play(guild, client, song, queue) {
 		return;
 	}
 
+    sql.query("INSERT INTO `music` (name, link, dateOfPlay, isPlaying) VALUES (?,?,?,1)", [song.title, song.url, new Date().toJSON()], (err)=>{
+        if (err){
+            console.error(err)
+            client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error adding music log: \`\`\`${err}\`\`\``)
+        }
+    })
+    
 	const dispatcher = serverQueue.connection.play(ytdl(song.url, { quality: 'highestaudio' }))
 		.on('finish', () => {
+            sql.query("UPDATE `music` SET `isPlaying` = 0 WHERE `link` = ? AND `isPlaying` = 1;", serverQueue.songs[0].url, (err)=>{
+                if (err){
+                    console.error(err)
+                    client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error updating music log: \`\`\`${err}\`\`\``)
+                }
+            })
+
 			if (serverQueue.loop == false) serverQueue.songs.shift();
 			else if (serverQueue.loop == "all") {
                 var song = serverQueue.songs[0]
@@ -30,7 +44,7 @@ function play(guild, client, song, queue) {
             embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
             .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
             serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 30000}))
-            play(guild, client, serverQueue.songs[0], queue);
+            play(guild, client, serverQueue.songs[0], queue, sql);
 		})
 		.on('error', error => {
 			console.error(error);
