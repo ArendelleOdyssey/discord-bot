@@ -25,6 +25,7 @@ module.exports = function(message, client, prefix, sql){
         .setAuthor('Play your music with ' + client.user.username)
         .setDescription(`Join a voice channel, type \`${prefix}p [Youtube URL or search]\` and boom! Music! 🎶\n\n**__More commands:__**`)
         .addField(prefix + 'pn', 'Play directly at the next', true)
+        .addField(prefix + 'search', 'Search a song', true)
         .addField(prefix + 'q', 'Show the queue', true)
         .addField(prefix + 's', 'Skip that song', true)
         .addField(prefix + 'remove', 'Remove one song from the queue or clear the queue', true)
