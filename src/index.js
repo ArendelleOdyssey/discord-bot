@@ -130,7 +130,8 @@ client.on('ready', async () => {
                         'on Instagram @arendelleodyssey',
                         'on Reddit r/ArendelleOdyssey',
                         'arendelleodyssey.com',
-                        'user'
+                        'user',
+                        'music'
                     ];
                     var status = randomItem(actmsgs)
                     if (status == 'user'){
@@ -147,6 +148,18 @@ client.on('ready', async () => {
                                 actmsg = randomItem(actmsgs)
                             } else {
                                 actmsg = res[0].count + ' jinxs!'
+                            }
+                        })
+                    }
+                    else if (status == 'music'){
+                        sql.query("SELECT * FROM `music` WHERE `isPlaying` = 1", function (err, res) {
+                            if (err) {
+                                console.error(err)
+                                client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
+                                actmsg = randomItem(actmsgs)
+                            } else {
+                                if (res.length < 1) actmsg = config.discord.prefix + "music"
+                                else actmsg = "🎶 " + res[0].name
                             }
                         })
                     }
