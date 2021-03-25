@@ -22,7 +22,11 @@ function remove(message, serverQueue) {
 
         if (argNumber > 1){
             var song = serverQueue.songs[argNumber-1]
-            serverQueue.songs.splice(argNumber-1, 1)
+            if (song == undefined) {
+                song = serverQueue.songs[serverQueue.songs.length-1]
+                serverQueue.songs.splice(serverQueue.songs.length-1, 1)
+            }
+            else serverQueue.songs.splice(argNumber-1, 1)
             return message.channel.send('Removed ' + song.title)
         } else return message.react('❌')
     }
