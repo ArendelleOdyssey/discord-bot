@@ -6,14 +6,14 @@ function loop(message, client, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
     if (serverQueue.loop == undefined) serverQueue.loop = false
     if (serverQueue.loopall == undefined) serverQueue.loopall = false
-   
-    if (serverQueue.loop == false) {
-        serverQueue.loopall = false
-        serverQueue.loop = true
-        message.react('🔂')
-    } else if (serverQueue.loop == true) {
-        serverQueue.loopall = false
+
+    if (serverQueue.loop == false || serverQueue.loop == true) {
         serverQueue.loop = false
+        serverQueue.loopall = true
+        message.react('🔁')
+    } else if (serverQueue.loopall == true) {
+        serverQueue.loop = false
+        serverQueue.loopall = false
         message.react('➡')
     }
 }

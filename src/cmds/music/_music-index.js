@@ -13,10 +13,11 @@ module.exports = function(message, client, prefix, sql){
     else if (message.content.toLowerCase() == `${prefix}skip` || message.content.toLowerCase() == `${prefix}s`) require('./skip.js')(message, client, serverQueue, play, queue, sql);
     else if (message.content.toLowerCase() == `${prefix}stop` || message.content.toLowerCase() == `${prefix}leave`) require('./stop.js')(message, serverQueue, queue, sql);
     else if (message.content.toLowerCase().startsWith(`${prefix}search`)) require('./search.js')(message, prefix);
-    else if (message.content.toLowerCase() == `${prefix}queue` || message.content.toLowerCase() == `${prefix}q`) require('./queue.js')(message, serverQueue);
+    else if (message.content.toLowerCase() == `${prefix}queue` || message.content.toLowerCase() == `${prefix}q`) require('./queue.js')(message, client, serverQueue);
 	else if (message.content.toLowerCase() == `${prefix}nowplaying` || message.content.toLowerCase() == `${prefix}np`) require('./nowplaying.js')(message, client, serverQueue);
     else if (message.content.toLowerCase() == `${prefix}volume` || message.content.toLowerCase() == `${prefix}vol`) require('./volume.js')(message);
 	else if (message.content.toLowerCase() == `${prefix}loop`) require('./loop.js')(message, client, serverQueue);
+	else if (message.content.toLowerCase() == `${prefix}loop all`) require('./loopall.js')(message, client, serverQueue);
 	else if (message.content.toLowerCase() == `${prefix}shuffle`) require('./shuffle.js')(message, client, serverQueue);
 
     else if (message.content.toLowerCase() == prefix + 'music'){

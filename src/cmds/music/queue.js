@@ -8,16 +8,74 @@ function fetchQueue(message, serverQueue){
         if (totalcount === 1) {
             listarray.push(`NOW PLAYING :        ${song.title}`)
         } else {
-            listarray.push(`#${totalcount} :                ${song.title}`)
+            listarray.push(`${totalcount} :                ${song.title}`)
         }
         totalcount++
     })
-    return listarray.join("\n")
+    return listarray
 }
 
-function queue(message, serverQueue) {
+function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
+    var theUser
+    const filter = (reaction, user) => {
+        theUser = user;
+        return ['⏫', '🔼', '🔽', '⏬'].includes(reaction.emoji.name) && user.id != client.user.id
+    };
+
+    queueList.awaitReactions(filter, { max: 1, time: 10*60*1000 })
+        .then(collected => {
+            const reaction = collected.first();
+
+            if (reaction != undefined){
+                if (reaction.emoji.name === '🔽') {
+                    if(listLast != list.length){
+                        listFirst++
+                        listLast++
+                    }
+                } else if (reaction.emoji.name === '🔼') {
+                    if(listFirst != 0){
+                        listFirst--
+                        listLast--
+                    }
+                } else if (reaction.emoji.name === '⏫') {
+                    if(listFirst-20 < 0){
+                        listFirst = 0
+                        listLast = 20
+                    } else {
+                        listFirst = listFirst - 20
+                        listLast = listLast - 20
+                    }
+                } else if (reaction.emoji.name === '⏬') {
+                    if(listLast+20 > list.length){
+                        listFirst = list.length - 20
+                        listLast = list.length
+                    } else {
+                        listFirst = listFirst + 20
+                        listLast = listLast + 20
+                    }
+                }
+                queueList.edit(`\`\`\`apache\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+                reaction.users.remove(theUser.id)
+                updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
+            }
+        })
+}
+
+async function queue(message, client, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
-        message.channel.send(`\`\`\`css\n${fetchQueue(message, serverQueue).length > 1800 ? fetchQueue(message, serverQueue).substring(0, 1800) + '...' : fetchQueue(message, serverQueue)}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+
+    var list = fetchQueue(message, serverQueue)
+    var listFirst = 0
+    var listLast = 20
+
+    const queueList = await message.channel.send(`\`\`\`fix\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+
+    queueList.react('⏫')
+    .then(queueList.react('🔼'))
+    .then(queueList.react('🔽'))
+    .then(queueList.react('⏬'));
+
+    updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
 }
 
 module.exports = queue
