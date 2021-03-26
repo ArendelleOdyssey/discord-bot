@@ -12,7 +12,7 @@ module.exports = async function(message, prefix){
     const filters2 = await ytsr.getFilters(filter1.url)
     const filter2 = filters2.get('Duration').get('Short (< 4 minutes)');
     const filters3 = await ytsr.getFilters(filter2.url)
-    const filter3 = filters3.get('Sort By').get('Relevance');
+    const filter3 = filters3.get('Sort by').get('Relevance');
     var options = {
         limit: 15
     }
