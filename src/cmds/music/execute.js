@@ -149,7 +149,7 @@ const song = {
     url: songInfo.videoDetails.video_url,
 };
 
-var playlist = await ytpl(args[0].substring(args[0].indexOf('list=')+5, args[0].indexOf('&index=')), {pages: Infinity})
+var playlist = await ytpl(url.substring(url.indexOf('list=')+5, url.indexOf('&index=')), {pages: Infinity})
 
 if (!serverQueue) {
     const queueContruct = {
