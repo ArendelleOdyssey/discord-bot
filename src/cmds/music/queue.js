@@ -15,11 +15,11 @@ function fetchQueue(message, serverQueue){
     return listarray
 }
 
-function updateQueue(queueList, list, listFirst, listLast, serverQueue){
-    const filter = (reaction) => {
-        return ['🔼', '🔽'].includes(reaction.emoji.name)
+function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
+    const filter = (reaction, user) => {
+        return ['🔼', '🔽'].includes(reaction.emoji.name) && user.id != client.user.id
     };
-    
+
     queueList.awaitReactions(filter, { max: 1, time: 10*60*1000 })
         .then(collected => {
             const reaction = collected.first();
@@ -38,11 +38,11 @@ function updateQueue(queueList, list, listFirst, listLast, serverQueue){
 
             queueList.edit(`\`\`\`md\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
             reaction.users.remove()
-            updateQueue(queueList, list, listFirst, listLast, serverQueue)
+            updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
         })
 }
 
-async function queue(message, serverQueue) {
+async function queue(message, client, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
 
     var list = fetchQueue(message, serverQueue)
@@ -53,7 +53,7 @@ async function queue(message, serverQueue) {
 
     queueList.react('🔼').then(() => queueList.react('🔽'));
 
-    updateQueue(queueList, list, listFirst, listLast, serverQueue)
+    updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
 }
 
 module.exports = queue
