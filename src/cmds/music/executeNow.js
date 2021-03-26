@@ -134,6 +134,94 @@ async function launch(message, client, url, play, queue, serverQueue, sql){
         }
 }
 
+async function launchPlaylist(message, client, url, play, queue, serverQueue, sql){
+    try {
+const voiceChannel = message.member.voice.channel;
+if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
+const permissions = voiceChannel.permissionsFor(message.client.user);
+if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+    return message.channel.send('I need the permissions to join and speak in your voice channel!').then(m=>message.channel.stopTyping(true))
+}
+
+const songInfo = await ytdl.getInfo(url);
+const song = {
+    title: songInfo.videoDetails.title,
+    url: songInfo.videoDetails.video_url,
+};
+
+var playlist = await ytpl(args[0].substring(args[0].indexOf('list=')+5, args[0].indexOf('&index=')), {pages: Infinity})
+
+if (!serverQueue) {
+    const queueContruct = {
+        textChannel: message.channel,
+        voiceChannel: voiceChannel,
+        connection: null,
+        songs: [song],
+        volume: 100,
+        playing: true,
+        loop: false,
+        loopall: false,
+        shuffle : false,
+    };
+
+    while (true) {
+        await Promise.all(playlist.items.map(async (item) => {
+            if (item.shortUrl != song.url){
+                const song = {
+                    title: item.title,
+                    url: item.shortUrl,
+                };
+                queueContruct.songs.push(song)
+            }
+        }));
+    
+        if (playlist.continuation != null){
+            playlist = ytpl.continueReq(playlist.continuation);
+        } else break;
+    }
+
+    message.channel.send(`Added ${queueContruct.songs.length+1} songs to the queue.`)
+  
+    queue.set(message.guild.id, queueContruct);
+  
+    try {
+        var connection = await voiceChannel.join();
+        queueContruct.connection = connection;
+        play(message.guild, client, queueContruct.songs[0], queue, sql);
+        message.channel.stopTyping(true)
+        message.react('▶')
+    } catch (err) {
+        console.error(err);
+        queue.delete(message.guild.id);
+        return message.channel.send(err);
+    }
+} else {
+    serverQueue.songs.splice(1,0,song);
+    var i = 2
+    while (true) {
+        await Promise.all(playlist.items.map(async (item) => {
+            if (item.shortUrl != song.url){
+                const song = {
+                    title: item.title,
+                    url: item.shortUrl,
+                };
+                serverQueue.songs.splice(i,0,song);
+                i++
+            }
+        }));
+
+        if (playlist.continuation != null){
+            playlist = ytpl.continueReq(playlist.continuation);
+        } else break;
+    }
+    message.channel.send(`Added ${i-2} songs in the first of the queue`)
+}
+    } catch (err) {
+            console.error(err)
+            message.channel.send('Error: ' + err)
+    }
+}
+
 async function search(message, client, args, play, serverQueue, queue, sql){
 	try{
 		let filter;
@@ -166,7 +254,8 @@ module.exports = async function(message, client, play, serverQueue, queue, sql) 
                 if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
                     playlist(message, client, args, play, queue, serverQueue, sql)
                 } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
-                    launch(message, client, args[0], play, queue, serverQueue, sql)
+                    if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, serverQueue, sql)
+                    else launch(message, client, args[0], play, queue, serverQueue, sql)
                 } else {
                     search(message, client, args, play, serverQueue, queue, sql)
                 }
@@ -176,7 +265,8 @@ module.exports = async function(message, client, play, serverQueue, queue, sql) 
                     if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
                         playlist(message, client, args, play, queue, serverQueue, sql)
                     } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
-                        launch(message, client, args[0], play, queue, serverQueue, sql)
+                        if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, serverQueue, sql)
+                        else launch(message, client, args[0], play, queue, serverQueue, sql)
                     } else {
                         search(message, client, args, play, serverQueue, queue, sql)
                     }
@@ -190,7 +280,8 @@ module.exports = async function(message, client, play, serverQueue, queue, sql) 
             if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
                 playlist(message, client, args, play, queue, serverQueue, sql)
             } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=')){
-                launch(message, client, args[0], play, queue, serverQueue, sql)
+                if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, serverQueue, sql)
+                else launch(message, client, args[0], play, queue, serverQueue, sql)
             } else {
                 search(message, client, args, play, serverQueue, queue, sql)
             }
