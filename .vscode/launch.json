@@ -8,7 +8,7 @@
             "type": "pwa-node",
             "request": "launch",
             "args": ["-d"],
-            "name": "Launch Program",
+            "name": "Debug Bot (Dev)",
             "skipFiles": [
                 "<node_internals>/**"
             ],
