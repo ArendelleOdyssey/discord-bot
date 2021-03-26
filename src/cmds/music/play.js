@@ -60,7 +60,17 @@ function play(guild, client, song, queue, sql) {
 		})
 		.on('error', error => {
 			console.error(error);
-		});
+            client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error while playing music song: \`\`\`${error}\`\`\``)
+            serverQueue.textChannel.sned('I have a problem while playing '+serverQueue.songs[0].title+', this bug is reported.\nI\'ll skip the song, sorry :/')
+            serverQueue.songs.shift();
+            if (serverQueue.shuffle == true) {
+                let random = Math.floor(Math.random() * serverQueue.songs.length)
+                var newFirst = serverQueue.songs[random]
+                serverQueue.songs.splice(random, 1);
+                serverQueue.songs.unshift(newFirst)
+            }
+            play(guild, client, serverQueue.songs[0], queue, sql);
+        });
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
     
     serverQueue.connection.on('disconnect', ()=>{
