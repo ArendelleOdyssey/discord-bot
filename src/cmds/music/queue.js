@@ -12,12 +12,43 @@ function fetchQueue(message, serverQueue){
         }
         totalcount++
     })
-    return listarray.join("\n")
+    return listarray
 }
 
-function queue(message, serverQueue) {
+async function queue(message, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
-        message.channel.send(`\`\`\`md\n${fetchQueue(message, serverQueue).length > 1800 ? fetchQueue(message, serverQueue).substring(0, 1800) + '...' : fetchQueue(message, serverQueue)}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+
+    var list = fetchQueue(message, serverQueue)
+    var listFirst = 0
+    var listLast = 20
+
+    const queueList = await message.channel.send(`\`\`\`md\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+
+    queueList.react('🔼').then(() => queueList.react('🔽'));
+
+    const filter = (reaction) => {
+        return ['🔼', '🔽'].includes(reaction.emoji.name)
+    };
+
+    queueList.awaitReactions(filter, { max: Infinity, time: Infinity })
+        .then(collected => {
+            const reaction = collected.first();
+
+            if (reaction.emoji.name === '🔽') {
+                if(listLast != list.length){
+                    listFirst++
+                    listLast++
+                }
+            } else if (reaction.emoji.name === '🔼') {
+                if(listFirst != 0){
+                    listFirst--
+                    listLast--
+                }
+            }
+
+            queueList.edit(`\`\`\`md\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+            reaction.users.remove()
+        })
 }
 
 module.exports = queue
