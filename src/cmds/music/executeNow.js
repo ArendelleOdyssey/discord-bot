@@ -15,7 +15,7 @@ async function playlist(message, client, args, play, queue, serverQueue, sql){
 			return message.channel.send('I need the permissions to join and speak in your voice channel!').then(m=>message.channel.stopTyping(true))
 		}
 
-		if (!serverQueue) {
+		if (!serverQueue || serverQueue.songs == undefined) {
 			const queueContruct = {
 				textChannel: message.channel,
 				voiceChannel: voiceChannel,
@@ -98,7 +98,7 @@ async function launch(message, client, url, play, queue, serverQueue, sql){
 		url: songInfo.videoDetails.video_url,
 	};
 	
-	if (!serverQueue) {
+	if (!serverQueue || serverQueue.songs == undefined) {
 		const queueContruct = {
 			textChannel: message.channel,
 			voiceChannel: voiceChannel,
@@ -151,7 +151,7 @@ const song = {
 
 var playlist = await ytpl(url.substring(url.indexOf('list=')+5, url.indexOf('&index=')), {pages: Infinity})
 
-if (!serverQueue) {
+if (!serverQueue || serverQueue.songs == undefined) {
     const queueContruct = {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
