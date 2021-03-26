@@ -19,7 +19,7 @@ function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
     var theUser
     const filter = (reaction, user) => {
         theUser = user;
-        return ['🔼', '🔽'].includes(reaction.emoji.name) && user.id != client.user.id
+        return ['⏫', '🔼', '🔽', '⏬'].includes(reaction.emoji.name) && user.id != client.user.id
     };
 
     queueList.awaitReactions(filter, { max: 1, time: 10*60*1000 })
@@ -36,9 +36,25 @@ function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
                     listFirst--
                     listLast--
                 }
+            } else if (reaction.emoji.name === '⏫') {
+                if(listFirst-20 < 0){
+                    listFirst = 0
+                    listLast = 20
+                } else {
+                    listFirst = listFirst - 20
+                    listLast = listLast - 20
+                }
+            } else if (reaction.emoji.name === '⏬') {
+                if(listLast+20 > list.length){
+                    listFirst = list.length - 20
+                    listLast = list.length
+                } else {
+                    listFirst = listFirst + 20
+                    listLast = listLast + 20
+                }
             }
 
-            queueList.edit(`\`\`\`css\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+            queueList.edit(`\`\`\`apache\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
             reaction.users.remove(theUser.id)
             updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
         })
@@ -51,9 +67,12 @@ async function queue(message, client, serverQueue) {
     var listFirst = 0
     var listLast = 20
 
-    const queueList = await message.channel.send(`\`\`\`css\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+    const queueList = await message.channel.send(`\`\`\`fix\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
 
-    queueList.react('🔼').then(() => queueList.react('🔽'));
+    queueList.react('⏫')
+    .then(queueList.react('🔼'))
+    .then(queueList.react('🔽'))
+    .then(queueList.react('⏬'));
 
     updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
 }
