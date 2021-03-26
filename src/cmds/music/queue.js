@@ -30,7 +30,7 @@ async function queue(message, serverQueue) {
         return ['🔼', '🔽'].includes(reaction.emoji.name)
     };
 
-    queueList.awaitReactions(filter, { max: Infinity, time: Infinity })
+    queueList.awaitReactions(filter, { time: 10*60*1000 })
         .then(collected => {
             const reaction = collected.first();
 
