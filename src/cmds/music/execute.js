@@ -252,7 +252,7 @@ module.exports = async function(message, client, play, serverQueue, queue, sql) 
         if (args[0].startsWith('https://www.youtube.com/playlist?list=') || args[0].startsWith('https://music.youtube.com/playlist?list=')) {
             playlist(message, client, args, play, queue, serverQueue, sql)
         } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=') || args[0].startsWith('https://youtu.be/')){
-            if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, serverQueue, sql)
+            if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, queue, serverQueue, sql)
             else launch(message, client, args[0], play, queue, serverQueue, sql)
         } else {
             search(message, client, args, play, serverQueue, queue, sql)
