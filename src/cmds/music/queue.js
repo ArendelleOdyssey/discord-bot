@@ -17,7 +17,7 @@ function fetchQueue(message, serverQueue){
 
 function queue(message, serverQueue) {
 	if (!serverQueue) return message.channel.send('There is no queue!');
-        message.channel.send(`Queue for ${message.guild.name}:\n\`\`\`css\n${fetchQueue(message, serverQueue).length > 1800 ? fetchQueue(message, serverQueue).substring(0, 1800) + '...' : fetchQueue(message, serverQueue)}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+        message.channel.send(`\`\`\`css\n${fetchQueue(message, serverQueue).length > 1800 ? fetchQueue(message, serverQueue).substring(0, 1800) + '...' : fetchQueue(message, serverQueue)}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
 }
 
 module.exports = queue

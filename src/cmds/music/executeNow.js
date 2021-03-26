@@ -24,6 +24,7 @@ async function playlist(message, client, args, play, queue, serverQueue, sql){
 				volume: 100,
 				playing: true,
 				loop : false,
+				loopall : false,
 				shuffle : false,
 			};
 
@@ -106,6 +107,7 @@ async function launch(message, client, url, play, queue, serverQueue, sql){
 			volume: 100,
 			playing: true,
 			loop: false,
+			loopall: false,
 			shuffle : false,
 		};
 	  

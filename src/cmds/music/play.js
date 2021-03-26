@@ -27,7 +27,7 @@ function play(guild, client, song, queue, sql) {
             })
 
 			if (serverQueue.loop == false) serverQueue.songs.shift();
-			else if (serverQueue.loop == "all") {
+			else if (serverQueue.loopall == true) {
                 var song = serverQueue.songs[0]
                 serverQueue.songs.shift();
                 serverQueue.songs.push(song)
