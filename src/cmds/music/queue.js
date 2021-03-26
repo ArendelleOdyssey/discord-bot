@@ -8,7 +8,7 @@ function fetchQueue(message, serverQueue){
         if (totalcount === 1) {
             listarray.push(`NOW PLAYING :        ${song.title}`)
         } else {
-            listarray.push(`#${totalcount} :                ${song.title}`)
+            listarray.push(`${totalcount} :                ${song.title}`)
         }
         totalcount++
     })
@@ -16,7 +16,9 @@ function fetchQueue(message, serverQueue){
 }
 
 function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
+    var theUser
     const filter = (reaction, user) => {
+        theUser = user;
         return ['🔼', '🔽'].includes(reaction.emoji.name) && user.id != client.user.id
     };
 
@@ -36,8 +38,8 @@ function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
                 }
             }
 
-            queueList.edit(`\`\`\`md\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
-            reaction.users.remove()
+            queueList.edit(`\`\`\`css\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+            reaction.users.remove(theUser.id)
             updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
         })
 }
@@ -49,7 +51,7 @@ async function queue(message, client, serverQueue) {
     var listFirst = 0
     var listLast = 20
 
-    const queueList = await message.channel.send(`\`\`\`md\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+    const queueList = await message.channel.send(`\`\`\`css\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
 
     queueList.react('🔼').then(() => queueList.react('🔽'));
 
