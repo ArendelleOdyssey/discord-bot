@@ -40,12 +40,23 @@ function play(guild, client, song, queue, sql) {
 				    serverQueue.songs.unshift(newFirst)
                 }
             }
-            let embed = new Discord.MessageEmbed()
-            embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
-            .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
-            if (serverQueue.songs[1]) embed.addField('Coming up next:', `[${serverQueue.songs[1].title}](${serverQueue.songs[1].url})`)
-            serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 30000}))
-            play(guild, client, serverQueue.songs[0], queue, sql);
+            if (serverQueue.songs[0] == undefined){
+                serverQueue.connection.disconnect();
+                sql.query("UPDATE `music` SET `isPlaying` = 0 WHERE `isPlaying` = 1;", (err)=>{
+                    if (err){
+                        console.error(err)
+                        client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error updating music log: \`\`\`${err}\`\`\``)
+                    }
+                })
+                queue.delete(guild.id)
+            } else {
+                let embed = new Discord.MessageEmbed()
+                embed.setAuthor('Now Playing 🎶', client.user.displayAvatarURL({dynamic: true}))
+                .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
+                if (serverQueue.songs[1]) embed.addField('Coming up next:', `[${serverQueue.songs[1].title}](${serverQueue.songs[1].url})`)
+                serverQueue.textChannel.send(embed).then(m=>m.delete({timeout: 30000}))
+                play(guild, client, serverQueue.songs[0], queue, sql);
+            }
 		})
 		.on('error', error => {
 			console.error(error);
