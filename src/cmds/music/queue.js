@@ -28,31 +28,27 @@ function updateQueue(client, queueList, list, listFirst, listLast, serverQueue){
 
             if (reaction != undefined){
                 if (reaction.emoji.name === '🔽') {
-                    if(listLast != list.length){
-                        listFirst++
-                        listLast++
+                    if(listLast+10 > list.length){
+                        listFirst = list.length - 10
+                        listLast = list.length
+                    } else {
+                        listFirst = listFirst + 10
+                        listLast = listLast + 10
                     }
                 } else if (reaction.emoji.name === '🔼') {
-                    if(listFirst != 0){
-                        listFirst--
-                        listLast--
-                    }
-                } else if (reaction.emoji.name === '⏫') {
                     if(listFirst-20 < 0){
                         listFirst = 0
                         listLast = 20
                     } else {
-                        listFirst = listFirst - 20
-                        listLast = listLast - 20
+                        listFirst = listFirst - 10
+                        listLast = listLast - 10
                     }
+                } else if (reaction.emoji.name === '⏫') {
+                    listFirst = 0
+                    listLast = 20
                 } else if (reaction.emoji.name === '⏬') {
-                    if(listLast+20 > list.length){
-                        listFirst = list.length - 20
-                        listLast = list.length
-                    } else {
-                        listFirst = listFirst + 20
-                        listLast = listLast + 20
-                    }
+                    listFirst = list.length - 20
+                    listLast = list.length
                 }
                 queueList.edit(`\`\`\`apache\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
                 reaction.users.remove(theUser.id)
