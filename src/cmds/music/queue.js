@@ -64,14 +64,15 @@ async function queue(message, client, serverQueue) {
     var listFirst = 0
     var listLast = 20
 
-    const queueList = await message.channel.send(`\`\`\`fix\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
-
-    queueList.react('⏫')
-    .then(queueList.react('🔼'))
-    .then(queueList.react('🔽'))
-    .then(queueList.react('⏬'));
-
-    updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
+    if (list.length > listLast) {
+        const queueList = await message.channel.send(`\`\`\`fix\n${list.slice(listFirst, listLast).join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
+        queueList.react('⏫')
+        .then(queueList.react('🔼'))
+        .then(queueList.react('🔽'))
+        .then(queueList.react('⏬'));
+    
+        updateQueue(client, queueList, list, listFirst, listLast, serverQueue)
+    } else message.channel.send(`\`\`\`fix\n${list.join("\n")}\`\`\`Total songs in queue: ${serverQueue.songs.length}. ${serverQueue.loop ? 'Loop one song activated. Shuffle ignored.' : ''} ${serverQueue.shuffle ? 'Shuffle activated.' : ''}`)
 }
 
 module.exports = queue
