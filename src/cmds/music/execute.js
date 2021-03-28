@@ -2,7 +2,7 @@ const Discord = require('discord.js')
 const ytdl = require('ytdl-core')
 const ytsr = require('ytsr')
 const ytpl = require('ytpl')
-const wait = require('util').promisify(setTimeout);
+const scdl = require('soundcloud-downloader').default
 
 async function playlist(message, client, args, play, queue, serverQueue, sql){
 	try{
@@ -149,7 +149,14 @@ const song = {
     url: songInfo.videoDetails.video_url,
 };
 
-var playlist = await ytpl(url.substring(url.indexOf('list=')+5, url.indexOf('&index=')), {pages: Infinity})
+var playlistURL;
+if (url.includes('index=')){
+    playlistURL = url.substring(url.indexOf('list=')+5, url.indexOf('&index='))
+} else {
+    playlistURL = url.substring(url.indexOf('list=')+5)
+}
+
+var playlist = await ytpl(playlistURL, {pages: Infinity})
 
 if (!serverQueue || serverQueue.songs == undefined) {
     const queueContruct = {
@@ -238,8 +245,59 @@ async function search(message, client, args, play, serverQueue, queue, sql){
         launch(message, client, url, play, queue, serverQueue, sql)
 	} catch(err){
 		console.error(err)
-		message.channel.send(err)
+		message.channel.send('Nothing was found, clearify your search or paste a Youtube or Soundcloud URL')
 	}
+}
+
+async function launchSC(message, client, url, play, queue, serverQueue, sql){
+    try {
+const voiceChannel = message.member.voice.channel;
+if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!').then(m=>message.channel.stopTyping(true))
+const permissions = voiceChannel.permissionsFor(message.client.user);
+if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+    return message.channel.send('I need the permissions to join and speak in your voice channel!').then(m=>message.channel.stopTyping(true))
+}
+
+const songInfo = await scdl.getInfo(url);
+const song = {
+    title: songInfo.title,
+    url: songInfo.permalink_url
+};
+
+if (!serverQueue || serverQueue.songs == undefined) {
+    const queueContruct = {
+        textChannel: message.channel,
+        voiceChannel: voiceChannel,
+        connection: null,
+        songs: [song],
+        volume: 100,
+        playing: true,
+        loop: false,
+        loopall: false,
+        shuffle : false,
+    };
+  
+    queue.set(message.guild.id, queueContruct);
+  
+    try {
+        var connection = await voiceChannel.join();
+        queueContruct.connection = connection;
+        play(message.guild, client, queueContruct.songs[0], queue, sql);
+        message.channel.stopTyping(true)
+        message.react('▶')
+    } catch (err) {
+        console.error(err);
+        queue.delete(message.guild.id);
+        return message.channel.send(err);
+    }
+} else {
+    serverQueue.songs.push(song);
+    message.channel.send(`\`${song.title}\` has been added to the queue!`).then(m=>message.channel.stopTyping(true))
+}
+    } catch (err) {
+            console.error(err)
+            message.channel.send('Error: ' + err)
+    }
 }
 
 module.exports = async function(message, client, play, serverQueue, queue, sql) {
@@ -254,6 +312,9 @@ module.exports = async function(message, client, play, serverQueue, queue, sql) 
         } else if (args[0].startsWith('https://www.youtube.com/watch?v=') || args[0].startsWith('https://music.youtube.com/watch?v=') || args[0].startsWith('https://youtu.be/')){
             if (args[0].includes('list=')) launchPlaylist(message, client, args[0], play, queue, serverQueue, sql)
             else launch(message, client, args[0], play, queue, serverQueue, sql)
+        } else if (args[0].startsWith('https://soundcloud.com/') || args[0].startsWith('https://m.soundcloud.com/')){
+            if (args[0].includes('/you') || args[0].includes('/stream') || args[0].includes('/discover') || args[0].includes('/upload') || args[0].includes('/notifications') || args[0].includes('/messages') || args[0].includes('/pages') || args[0].includes('/terms-of-use') || args[0].includes('/mobile') || args[0].includes('/jobs') || args[0].includes('/settings') || args[0].includes('/logout')) return message.reply('Invalid Soundcloud URL') 
+            else launchSC(message, client, args[0], play, queue, serverQueue, sql)
         } else {
             search(message, client, args, play, serverQueue, queue, sql)
         }

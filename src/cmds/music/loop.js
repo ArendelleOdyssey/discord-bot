@@ -11,7 +11,7 @@ function loop(message, client, serverQueue) {
         serverQueue.loopall = false
         serverQueue.loop = true
         message.react('🔂')
-    } else if (serverQueue.loop == true) {
+    } else if (serverQueue.loop == true || serverQueue.loopall == true) {
         serverQueue.loopall = false
         serverQueue.loop = false
         message.react('➡')
