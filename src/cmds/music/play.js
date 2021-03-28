@@ -1,7 +1,8 @@
 const Discord = require('discord.js')
 const ytdl = require('ytdl-core')
+const scdl = require('soundcloud-downloader').default
 
-function play(guild, client, song, queue, sql) {
+async function play(guild, client, song, queue, sql) {
 	const serverQueue = queue.get(guild.id);
 
 	if (!song) {
@@ -16,8 +17,15 @@ function play(guild, client, song, queue, sql) {
             client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error adding music log: \`\`\`${err}\`\`\``)
         }
     })
-    
-	const dispatcher = serverQueue.connection.play(ytdl(song.url, { quality: 'highestaudio' }))
+
+    var stream;
+    if (song.url.includes('youtube')){
+        stream = ytdl(song.url, { quality: 'highestaudio' })
+    } else if (song.url.includes('soundcloud')){
+        stream = await scdl.download(song.url)
+    }
+
+	const dispatcher = serverQueue.connection.play(stream)
 		.on('finish', () => {
             sql.query("UPDATE `music` SET `isPlaying` = 0 WHERE `link` = ? AND `isPlaying` = 1;", serverQueue.songs[0].url, (err)=>{
                 if (err){

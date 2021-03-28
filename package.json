@@ -42,6 +42,7 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "shelljs": "^0.8.4",
+    "soundcloud-downloader": "^0.2.4",
     "twit": "2.2.11",
     "twitter-lite": "^1.1.0",
     "youtube-api": "^3.0.1",
