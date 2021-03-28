@@ -7,11 +7,11 @@ function loop(message, client, serverQueue) {
     if (serverQueue.loop == undefined) serverQueue.loop = false
     if (serverQueue.loopall == undefined) serverQueue.loopall = false
 
-    if (serverQueue.loop == false || serverQueue.loop == true) {
+    if (serverQueue.loopall == false) {
         serverQueue.loop = false
         serverQueue.loopall = true
         message.react('🔁')
-    } else if (serverQueue.loopall == true) {
+    } else if (serverQueue.loopall == true || serverQueue.loop == true) {
         serverQueue.loop = false
         serverQueue.loopall = false
         message.react('➡')
