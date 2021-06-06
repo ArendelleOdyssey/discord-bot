@@ -13,9 +13,12 @@ module.exports = function(client, message, prefix, config, sql){
                         var list = []
                         result.forEach(r=>{
                             var command = r['command-name']
-                            var username = client.users.cache.get(String(r.user)).username
-                            if (username == undefined) username = 'Username not found 🤦‍♂️'
-                            list.push(`\`${prefix}${command}\` - ${username}`)
+                            var user = client.users.cache.get(String(r.user))
+                            if (user != undefined){
+                                var username = user.username
+                            
+                                list.push(`\`${prefix}${command}\` - ${username}`)
+                            }
                         })
                         let embed = new Discord.MessageEmbed
                         embed.setTitle('User\'s command list:')

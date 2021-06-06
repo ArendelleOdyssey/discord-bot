@@ -127,7 +127,7 @@ module.exports = function(client, message, prefix, config, sql){
                 var messages = []
                 result.forEach(r=>messages.push(r.message))
                 if (messages.length < 1) return
-                message.channel.send(randomItem(messages))
+                message.channel.send({content: randomItem(messages), disableMentions: 'all'})
             }
         })
     }
