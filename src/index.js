@@ -187,7 +187,7 @@ client.on('ready', async () => {
             //require('./events/streaming-ig.js')(client, config, old_ig_id)
     
             // Check new youtube posts
-            require('./events/streaming-yt.js')(client, config)
+            //require('./events/streaming-yt.js')(client, config)
     
             // Read r/arendelleodyssey posts
             require('./events/streaming-reddit.js')(client, config)
