@@ -20,12 +20,11 @@
   },
   "homepage": "https://github.com/ArendelleOdyssey/discord-bot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "discord-giveaways": "^4.5.1",
     "discord.js": "^12.5.3",
-    "download": "8.0.0",
+    "download": "^6.2.5",
     "easy-table": "^1.1.1",
     "express": "^4.17.1",
     "ffmpeg": "^0.0.4",
@@ -42,13 +41,9 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "shelljs": "^0.8.4",
-    "soundcloud-downloader": "^0.2.4",
     "twit": "2.2.11",
     "twitter-lite": "^1.1.0",
-    "youtube-api": "^3.0.1",
-    "ytdl-core": "^4.8.2",
-    "ytpl": "^2.2.1",
-    "ytsr": "^3.5.0"
+    "youtube-api": "^3.0.1"
   },
   "devDependencies": {
     "eslint": "^7.28.0"
