@@ -14,7 +14,7 @@ module.exports = function(message, client, prefix, config, sql){
                 res.forEach(r=>{
                     var username
                     var user = client.users.cache.find(u=>u.id == r.user)
-                    if (user == undefined) username = 'Username not found ('+r.user+')'
+                    if (!user || user == undefined) username = 'Username not found ('+r.user+')'
                     username = user.username
                     if (!username || username == undefined) username = 'Username not found ('+r.user+')'
                     t.cell('User', username)
