@@ -20,7 +20,7 @@ module.exports = function(client, message, prefix, config, sql){
 
     // AO managment commands
     require('./mods/stats/_stats-index.js')(message, client, prefix, config, sql)
-    //require('./mods/embed-announcement.js')(message, client, prefix, config)
+    require('./mods/embed-announcement.js')(message, client, prefix, config)
     require('./mods/giveaways.js')(message, client, prefix, config)
 
     // AO commands
