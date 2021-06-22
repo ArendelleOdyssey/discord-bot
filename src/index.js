@@ -130,15 +130,14 @@ client.on('ready', async () => {
                         'on Instagram @arendelleodyssey',
                         'on Reddit r/ArendelleOdyssey',
                         'arendelleodyssey.com',
-                        'user',
-                        'music'
+                        'user'
                     ];
                     var status = randomItem(actmsgs)
                     if (status == 'user'){
                         var user = randomItem(client.guilds.cache.get(guild).members.cache.array())
                         var nick = user.nickname
                         if (nick == null) actmsg = user.user.username
-                        else actmsg = nick
+                        else actmsg = "with " + nick
                     }
                     else if (status == 'jinxs'){
                         sql.query("SELECT * FROM `jinxs`", function (err, res) {
@@ -148,18 +147,6 @@ client.on('ready', async () => {
                                 actmsg = randomItem(actmsgs)
                             } else {
                                 actmsg = res[0].count + ' jinxs!'
-                            }
-                        })
-                    }
-                    else if (status == 'music'){
-                        sql.query("SELECT * FROM `music` WHERE `isPlaying` = 1", function (err, res) {
-                            if (err) {
-                                console.error(err)
-                                client.users.cache.find(u => u.id == config.discord.owner_id).send(`:warning: Error getting jinx counter: \`\`\`${err}\`\`\``)
-                                actmsg = randomItem(actmsgs)
-                            } else {
-                                if (res.length < 1) actmsg = config.discord.prefix + "music"
-                                else actmsg = "🎶 " + res[0].name
                             }
                         })
                     }
@@ -187,7 +174,7 @@ client.on('ready', async () => {
             //require('./events/streaming-ig.js')(client, config, old_ig_id)
     
             // Check new youtube posts
-            require('./events/streaming-yt.js')(client, config)
+            //require('./events/streaming-yt.js')(client, config)
     
             // Read r/arendelleodyssey posts
             require('./events/streaming-reddit.js')(client, config)

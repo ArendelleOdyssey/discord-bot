@@ -6,7 +6,7 @@ const discord = require('discord.js')
 
 module.exports = function(message, client, prefix, config){
     if (message.content.toLowerCase() == prefix + "announce") {
-        if (message.member.hasPermission("BAN_MEMBERS")) {
+        if (message.member.hasPermission('MANAGE_MESSAGES')) {
             let embed = new discord.MessageEmbed()
                 .setTitle("Embed")
                 .setDescription("Please specify a __channel__ to send this announcement in\n\nSay `cancel` to cancel")

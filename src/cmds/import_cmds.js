@@ -20,16 +20,13 @@ module.exports = function(client, message, prefix, config, sql){
 
     // AO managment commands
     require('./mods/stats/_stats-index.js')(message, client, prefix, config, sql)
-    //require('./mods/embed-announcement.js')(message, client, prefix, config)
+    require('./mods/embed-announcement.js')(message, client, prefix, config)
     require('./mods/giveaways.js')(message, client, prefix, config)
 
     // AO commands
     require('./ao/sots.js')(message, client, prefix, config)
     require('./ao/jinxs.js')(message, client, prefix, sql)
     require('./ao/events/event-index.js')(message, client, prefix, config, sql)
-
-    // Music commands
-    require('./music/_music-index.js')(message, client, prefix, sql)
 
     // Owner commands
     if (message.author.id == config.discord.owner_id){
