@@ -179,9 +179,6 @@ client.on('ready', async () => {
             // Read r/arendelleodyssey posts
             require('./events/streaming-reddit.js')(client, config)
     
-            // timer messages in general channel
-            require('./events/auto-messages-info.js')(client)
-    
         } else if (client.user.id == config.discord.bot_id_beta) {
             client.user.setActivity(config.discord.prefix_beta + 'help', { type: 'LISTENING' })
             client.user.setStatus('idle')
