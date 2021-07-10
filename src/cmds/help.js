@@ -26,7 +26,6 @@ module.exports = function(client, message, prefix, config){
         if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.cache.some(role => role.name.toLowerCase() == 'giveaway host')) embed.addField(prefix + 'giveaway', '[Mods/Giveaway Hosters] Host a new giveaway or manage existing giveaways', true)
         if (message.member.hasPermission('MANAGE_MESSAGES')) embed.addField(prefix + 'stat', '[Mods] Get stats about the bot', true)
         if (message.member.hasPermission('MANAGE_MESSAGES')) embed.addField(prefix + 'announce', '[Mods] Send an announcement in a embed', true)
-        if (message.member.roles.cache.some(role => role.id == '729083781062983702'))  embed.addField(prefix + 'sendlasttweet', `[ST] Send latest tweet to <#${config.twitter.post_channel_id}>`, true)
         if (message.author.id == config.discord.owner_id) embed.addField(prefix + 'update', '[Owner] Update the bot from git repo', true)
         if (message.author.id == config.discord.owner_id) embed.addField(prefix + 'eval', '[Owner] Evaluate JS', true)
         if (message.author.id == config.discord.owner_id) embed.addField(prefix + 'ssh', '[Owner] Evaluate shell command', true)

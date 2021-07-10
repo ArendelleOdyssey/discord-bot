@@ -3,6 +3,14 @@ const createError = require('http-errors');
 var scriptName = path.basename(__filename).replace('.js', '');
 
 module.exports = function(app, client, config, sql, guild){
+    app.get('/'+scriptName+"s", async (req, res, next) => {
+        try{
+            res.json(client.guild.fetch(guild).channels.cache)
+        } catch (err){
+            console.error(err)
+            next(createError(500))
+        }
+    })
     app.get('/'+scriptName, async (req, res, next) => {
         try{
             res.json({error: {message: "Please set a specific channel: /channel/:ID"}})
