@@ -8,6 +8,7 @@ module.exports = function(client, message, sql){
             if (oldmsg.author.bot || message.author.bot) return
             if (oldmsg.author.id == message.author.id) return
             if (oldmsg.channel.id != message.channel.id) return
+            if (oldmsg.content == "" || message.content == "") return
             message.channel.send('https://cdn.discordapp.com/emojis/755280811447812127.png?v=1')
             sql.query("SELECT * FROM `jinxs`", function (err, res) {
                 if (err) {
