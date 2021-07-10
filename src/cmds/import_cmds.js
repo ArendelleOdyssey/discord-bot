@@ -13,7 +13,6 @@ module.exports = function(client, message, prefix, config, sql){
 
     // Twitter integration
     require('./twitter/tweet.js')(client, message, prefix, config)
-    require('./twitter/last-tweet.js')(client, message, prefix, config)
 
     // Reddit integration
     require('./reddit/last-reddit.js')(client, message, prefix, config)

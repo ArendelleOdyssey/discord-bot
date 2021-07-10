@@ -26,7 +26,6 @@ sql.query('SHOW TABLES', async function (error, results, fields) {
         await require('./sqlScripts/create-tables.js')(sql, client)
     }
 });
-const Twitter = require('twitter-lite')
 
 const DiscordGiveaways = require("discord-giveaways");
 const GiveawayManager = class extends DiscordGiveaways.GiveawaysManager {
@@ -156,26 +155,10 @@ client.on('ready', async () => {
                 }, 3 * 60 * 1000);
             })
             
-            const twitter_client = new Twitter({
-                consumer_key:        config.twitter.consumer_key,
-                consumer_secret:     config.twitter.consumer_secret,
-                access_token_key:    config.twitter.access_token_key,
-                access_token_secret: config.twitter.access_token_secret,
-            });
     
             client.user.setActivity(config.discord.prefix + 'help', { type: 'WATCHING' })
             client.user.setStatus('online')
             
-            // Read @ArendelleO Tweets
-            require('./events/streaming-tweets.js')(twitter_client, client, config, sql)
-    
-            // Read @arendelleodyssey IG posts
-            //var old_ig_id = undefined
-            //require('./events/streaming-ig.js')(client, config, old_ig_id)
-    
-            // Check new youtube posts
-            //require('./events/streaming-yt.js')(client, config)
-    
             // Read r/arendelleodyssey posts
             require('./events/streaming-reddit.js')(client, config)
     
