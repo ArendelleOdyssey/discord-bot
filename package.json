@@ -31,7 +31,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.2",
     "hat": "^0.0.3",
-    "http-errors": "^1.8.0",
+    "http-errors": "^1.8.1",
     "instagram-scraping": "^1.0.16",
     "morgan": "^1.10.0",
     "ms": "^2.1.3",
