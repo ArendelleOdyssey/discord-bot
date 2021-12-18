@@ -25,7 +25,7 @@
     "discord-giveaways": "^4.5.1",
     "discord.js": "^12.5.3",
     "download": "^6.2.5",
-    "easy-table": "^1.1.1",
+    "easy-table": "^1.2.0",
     "express": "^4.17.2",
     "ffmpeg": "^0.0.4",
     "fluent-ffmpeg": "^2.1.2",
