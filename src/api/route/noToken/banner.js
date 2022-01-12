@@ -7,13 +7,13 @@ module.exports = function(app, client, config, sql, guild){
     app.get('/guild/'+scriptName, async (req, res, next) => {
         try{
             var fetchGuild = await client.guilds.fetch(guild)
-            var bannerURL = fetchGuild.bannerURL({format: 'png', size: 4096, dynamic: true})
+            var bannerURL = fetchGuild.bannerURL({size: 4096, dynamic: true})
             if (bannerURL == null) next(createError(404))
             else {
-                download(bannerURL, './data/cache', {filename: 'guild_banner.png'})
+                download(bannerURL, './data/cache', {filename: 'guild_banner'})
                 .then(function(){
                     // send image
-                    res.sendFile(process.cwd() + '/data/cache/guild_banner.png')
+                    res.sendFile(process.cwd() + '/data/cache/guild_banner')
                 })
             }
         } catch (err){
